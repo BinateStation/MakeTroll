@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
 
-    <FrameLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/CL_editor_frame"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/CL_action_edit"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/CL_editor_frame"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/edit"
+            android:src="@drawable/ic_create_black_24dp" />
 
         <jp.wasabeef.richeditor.RichEditor
             android:id="@+id/CL_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </FrameLayout>
 
 
-    <ImageButton
-        android:id="@+id/CL_action_edit"
-        style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/CL_editor_frame"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/edit"
-        android:src="@drawable/ic_create_black_24dp" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
 
 </RelativeLayout>

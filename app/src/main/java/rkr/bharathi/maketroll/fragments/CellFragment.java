@@ -154,6 +154,9 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             mLabelRichEditor.setEditorFontColor(Color.RED);
             mLabelRichEditor.setEditorBackgroundColor(android.R.color.transparent);
             mLabelRichEditor.setHtml(getString(R.string.app_name));
+
+            ImageButton imageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
+            imageButton.setOnClickListener(this);
         }
     }
 
@@ -220,6 +223,9 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 break;
             case R.id.AIF_action_add_image:
                 showImagePicker();
+                break;
+            case R.id.CL_action_edit:
+                showTextEditorFragment();
                 break;
         }
     }
@@ -316,10 +322,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
     @Override
     public boolean onLongClick(View v) {
-        if (v.getId() == R.id.CL_label) {
-            showTextEditorFragment();
-            return true;
-        }
         return false;
     }
 
