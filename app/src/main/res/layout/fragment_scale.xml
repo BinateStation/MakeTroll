@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    tools:context="rkr.bharathi.maketroll.fragments.dialogs.ScaleFragment">
+
+    <TextView
+        android:id="@+id/FS_label_width"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:text="@string/width"
+        android:textColor="@android:color/white" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/FS_width"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FS_label_width"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/FS_label_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FS_width"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:text="@string/height"
+        android:textColor="@android:color/white" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/FS_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FS_label_height"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@android:color/white" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/FS_done"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FS_height"
+        android:layout_centerInParent="true"
+        android:text="@string/done" />
+
+
+</RelativeLayout>
