@@ -5,30 +5,50 @@
     android:background="@android:color/transparent">
 
 
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/CL_editor_frame"
+    <!--<android.support.v7.widget.LinearLayoutCompat-->
+    <!--android:id="@+id/CL_editor_frame"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:gravity="center">-->
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/CL_action_edit"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center">
+        android:contentDescription="@string/edit"
+        android:src="@drawable/ic_create_black_24dp" />
 
-        <ImageButton
-            android:id="@+id/CL_action_edit"
-            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/CL_editor_frame"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/edit"
-            android:src="@drawable/ic_create_black_24dp" />
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/CL_action_bring_to_front"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/CL_action_edit"
+        android:layout_toEndOf="@id/CL_action_edit"
+        android:layout_toRightOf="@id/CL_action_edit"
+        android:contentDescription="@string/view_drag_helper"
+        android:src="@drawable/ic_bring_to_front" />
 
-        <jp.wasabeef.richeditor.RichEditor
-            android:id="@+id/CL_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/CL_action_remove_frame"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/CL_action_edit"
+        android:layout_toEndOf="@id/CL_action_bring_to_front"
+        android:layout_toRightOf="@id/CL_action_bring_to_front"
+        android:contentDescription="@string/remove_frame"
+        android:src="@drawable/ic_cancel_black_24dp" />
 
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/CL_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/CL_action_edit" />
 
-    </android.support.v7.widget.LinearLayoutCompat>
+    <!--</android.support.v7.widget.LinearLayoutCompat>-->
 
 
 </RelativeLayout>

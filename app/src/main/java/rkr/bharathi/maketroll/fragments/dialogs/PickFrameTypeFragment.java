@@ -1,13 +1,16 @@
 package rkr.bharathi.maketroll.fragments.dialogs;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import rkr.bharathi.maketroll.R;
 
@@ -53,6 +56,17 @@ public class PickFrameTypeFragment extends DialogFragment implements View.OnClic
 
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        // request a window without the title
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.requestFeature(Window.FEATURE_NO_TITLE);
+        }
+        return dialog;
+    }
     @Override
     public void onClick(View v) {
         if (mOnClickListener != null) {

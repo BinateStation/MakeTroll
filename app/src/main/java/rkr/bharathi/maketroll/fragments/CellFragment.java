@@ -32,14 +32,14 @@ import rkr.bharathi.maketroll.models.ItemModel;
 import rkr.bharathi.maketroll.models.ViewType;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static android.content.ContentValues.TAG;
 import static android.view.MotionEvent.ACTION_DOWN;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, View.OnLongClickListener {
+public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
 
+    private static final String TAG = "CellFragment";
 
     private int _xDelta;
     private int _yDelta;
@@ -93,8 +93,9 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             view.setLayoutParams(mLayoutParams);
         }
         view.setOnTouchListener(this);
+        view.setOnClickListener(this);
 
-        if (mItemModel.getViewType() != ViewType.TEXT) {
+        if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT) {
             actionAddImage = (ImageView) view.findViewById(R.id.AIF_action_add_image);
             actionRemoveFrame = (ImageButton) view.findViewById(R.id.AIF_action_remove_frame);
             maskView = view.findViewById(R.id.AIF_mask_view);
@@ -110,6 +111,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
             actionRemoveFrame.setOnClickListener(this);
             actionAddImage.setOnClickListener(this);
+            ImageButton actionBringToFrontImageButton = (ImageButton) view.findViewById(R.id.AIF_action_bring_to_front);
+            actionBringToFrontImageButton.setOnClickListener(this);
 
             mAttache = new PhotoViewAttacher(actionAddImage);
             mAttache.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
@@ -139,7 +142,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 }
             });
         } else {
-            view.setOnLongClickListener(this);
             mLabelRichEditor = (RichEditor) view.findViewById(R.id.CL_label);
             mLabelRichEditor.setFocusable(false);
             mLabelRichEditor.setFocusableInTouchMode(false);
@@ -155,8 +157,15 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             mLabelRichEditor.setEditorBackgroundColor(android.R.color.transparent);
             mLabelRichEditor.setHtml(getString(R.string.app_name));
 
-            ImageButton imageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
-            imageButton.setOnClickListener(this);
+            ImageButton editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
+            editLabelImageButton.setOnClickListener(this);
+
+            ImageButton removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
+            removeFrameImageButton.setOnClickListener(this);
+
+            ImageButton actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
+            actionBringToFront.setOnClickListener(this);
+
         }
     }
 
@@ -206,6 +215,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     public void setHideUnwantedViews(boolean hideUnwantedViews) {
+        Log.d(TAG, "setHideUnwantedViews() called with: hideUnwantedViews = [" + hideUnwantedViews + "]");
         this.hideUnwantedViews = hideUnwantedViews;
         setView();
         if (mItemModel.getViewType() != ViewType.TEXT && mItemModel.getBitmap() == null && mCellFragmentListener != null) {
@@ -217,6 +227,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.AIF_action_remove_frame:
+            case R.id.CL_action_remove_frame:
                 if (mCellFragmentListener != null) {
                     mCellFragmentListener.remove(mPosition);
                 }
@@ -227,10 +238,14 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             case R.id.CL_action_edit:
                 showTextEditorFragment();
                 break;
+            case R.id.AIF_action_bring_to_front:
+            case R.id.CL_action_bring_to_front:
+                bringToFrontCell();
         }
     }
 
     private void showTextEditorFragment() {
+        Log.d(TAG, "showTextEditorFragment() called");
         String text = "";
         if (mLabelRichEditor != null) {
             text = mLabelRichEditor.getHtml();
@@ -248,6 +263,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     private void actionScale(int height, int width, int measuredHeight, int measuredWidth) {
+        Log.d(TAG, "actionScale() called with: height = [" + height + "], width = [" + width + "], measuredHeight = [" + measuredHeight + "], measuredWidth = [" + measuredWidth + "]");
         ScaleFragment scaleFragment = ScaleFragment.newInstance(height, width, measuredHeight, measuredWidth, new ScaleFragment.ScaleListener() {
             @Override
             public void onChangeHeight(int height) {
@@ -287,6 +303,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     private void setView() {
+        Log.d(TAG, "setView() called");
         if (mItemModel != null && !hideUnwantedViews) {
             Bitmap bitmap = mItemModel.getBitmap();
             if (bitmap != null) {
@@ -305,6 +322,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     private void showImagePicker() {
+        Log.d(TAG, "showImagePicker() called");
         PickImageDialog.on(getChildFragmentManager(), new PickSetup(BuildConfig.APPLICATION_ID))
                 .setOnPickResult(new IPickResult() {
                     @Override
@@ -320,9 +338,10 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 });
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        return false;
+    private void bringToFrontCell() {
+        if (itemView != null) {
+            itemView.bringToFront();
+        }
     }
 
     public interface CellFragmentListener {

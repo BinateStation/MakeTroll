@@ -53,5 +53,17 @@
             android:contentDescription="@string/view_drag_helper"
             android:src="@drawable/ic_scale" />
 
+        <ImageButton
+            android:id="@+id/AIF_action_bring_to_front"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:contentDescription="@string/view_drag_helper"
+            android:src="@drawable/ic_bring_to_front" />
+
     </RelativeLayout>
 </FrameLayout>
