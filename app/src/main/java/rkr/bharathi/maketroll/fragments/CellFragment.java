@@ -18,13 +18,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.vansuita.pickimage.PickImageDialog;
-import com.vansuita.pickimage.PickSetup;
 import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import jp.wasabeef.richeditor.RichEditor;
-import rkr.bharathi.maketroll.BuildConfig;
 import rkr.bharathi.maketroll.R;
 import rkr.bharathi.maketroll.fragments.dialogs.ScaleFragment;
 import rkr.bharathi.maketroll.fragments.dialogs.TextEditorFragment;
@@ -37,7 +36,7 @@ import static android.view.MotionEvent.ACTION_DOWN;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
+public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, IPickResult {
 
     private static final String TAG = "CellFragment";
 
@@ -45,19 +44,20 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private int _yDelta;
     private CellFragmentListener mCellFragmentListener;
     private FrameLayout.LayoutParams mLayoutParams;
-
     private ItemModel mItemModel;
     private int mMaxWidth = 400;
     private int mMaxHeight = 600;
     private boolean hideUnwantedViews = false;
     private int mPosition;
-
     private ImageView actionAddImage;
     private ImageButton actionRemoveFrame;
     private PhotoViewAttacher mAttache;
     private View maskView;
     private View itemView;
     private RichEditor mLabelRichEditor;
+    private ImageButton editLabelImageButton;
+    private ImageButton removeFrameImageButton;
+    private ImageButton actionBringToFront;
 
     public CellFragment() {
         // Required empty public constructor
@@ -153,17 +153,17 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 }
             });
             mLabelRichEditor.setEditorFontSize(22);
-            mLabelRichEditor.setEditorFontColor(Color.RED);
-            mLabelRichEditor.setEditorBackgroundColor(android.R.color.transparent);
-            mLabelRichEditor.setHtml(getString(R.string.app_name));
+            mLabelRichEditor.setEditorFontColor(Color.BLACK);
+            mLabelRichEditor.setEditorBackgroundColor(Color.TRANSPARENT);
+            mLabelRichEditor.setHtml(getString(R.string.message));
 
-            ImageButton editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
+            editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
             editLabelImageButton.setOnClickListener(this);
 
-            ImageButton removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
+            removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
             removeFrameImageButton.setOnClickListener(this);
 
-            ImageButton actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
+            actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
             actionBringToFront.setOnClickListener(this);
 
         }
@@ -318,30 +318,34 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         }
         if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT && hideUnwantedViews) {
             actionRemoveFrame.setVisibility(View.GONE);
+        } else if (mItemModel != null && mItemModel.getViewType() == ViewType.TEXT && hideUnwantedViews) {
+            editLabelImageButton.setVisibility(View.GONE);
+            removeFrameImageButton.setVisibility(View.GONE);
+            actionBringToFront.setVisibility(View.GONE);
         }
     }
 
     private void showImagePicker() {
         Log.d(TAG, "showImagePicker() called");
-        PickImageDialog.on(getChildFragmentManager(), new PickSetup(BuildConfig.APPLICATION_ID))
-                .setOnPickResult(new IPickResult() {
-                    @Override
-                    public void onPickResult(PickResult r) {
-                        Exception exception = r.getError();
-                        if (exception == null) {
-                            mItemModel.setBitmap(r.getBitmap());
-                            setView();
-                        } else {
-                            Log.e(TAG, "onPickResult: ", exception);
-                        }
-                    }
-                });
+        PickImageDialog.build(new PickSetup()).show(getActivity()).setOnPickResult(this);
     }
 
     private void bringToFrontCell() {
         if (itemView != null) {
             itemView.bringToFront();
         }
+    }
+
+    @Override
+    public void onPickResult(PickResult pickResult) {
+        Throwable exception = pickResult.getError();
+        if (exception == null) {
+            mItemModel.setBitmap(pickResult.getBitmap());
+            setView();
+        } else {
+            Log.e(TAG, "onPickResult: ", exception);
+        }
+
     }
 
     public interface CellFragmentListener {

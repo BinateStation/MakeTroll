@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import jp.wasabeef.richeditor.RichEditor;
 import rkr.bharathi.maketroll.R;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**
  * Dialog fragment to add text
@@ -60,6 +61,7 @@ public class TextEditorFragment extends DialogFragment {
         }
         return dialog;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,7 +76,7 @@ public class TextEditorFragment extends DialogFragment {
         mEditor = (RichEditor) view.findViewById(R.id.FTE_editor);
         mEditor.setEditorHeight(200);
         mEditor.setEditorFontSize(22);
-        mEditor.setEditorFontColor(Color.RED);
+        mEditor.setEditorFontColor(Color.BLACK);
         mEditor.setPadding(10, 10, 10, 10);
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_TEXT)) {
@@ -141,22 +143,34 @@ public class TextEditorFragment extends DialogFragment {
         });
 
         view.findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
             @Override
             public void onClick(View v) {
-                mEditor.setTextColor(isChanged ? Color.BLACK : Color.RED);
-                isChanged = !isChanged;
+                showColorPicker(Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        mEditor.setTextColor(color);
+                    }
+                });
             }
         });
 
         view.findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
             @Override
             public void onClick(View v) {
-                mEditor.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-                isChanged = !isChanged;
+                showColorPicker(Color.TRANSPARENT, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        mEditor.setTextBackgroundColor(color);
+                    }
+                });
             }
         });
 
@@ -228,6 +242,11 @@ public class TextEditorFragment extends DialogFragment {
         });
     }
 
+
+    private void showColorPicker(int defaultColor, AmbilWarnaDialog.OnAmbilWarnaListener onAmbilWarnaListener) {
+        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(getContext(), defaultColor, true, onAmbilWarnaListener);
+        ambilWarnaDialog.show();
+    }
 
     public interface TextEditorListener {
         void onDone(String text);

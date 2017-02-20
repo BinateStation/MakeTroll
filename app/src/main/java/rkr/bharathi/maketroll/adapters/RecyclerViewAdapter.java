@@ -12,16 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.vansuita.pickimage.PickImageDialog;
-import com.vansuita.pickimage.PickSetup;
 import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rkr.bharathi.maketroll.BuildConfig;
 import rkr.bharathi.maketroll.R;
 import rkr.bharathi.maketroll.fragments.dialogs.ScaleFragment;
 import rkr.bharathi.maketroll.models.ItemModel;
@@ -117,19 +116,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void showImagePicker(final int adapterPosition) {
         if (mSupportFragmentManager != null) {
-            PickImageDialog.on(getSupportFragmentManager(), new PickSetup(BuildConfig.APPLICATION_ID))
-                    .setOnPickResult(new IPickResult() {
-                        @Override
-                        public void onPickResult(PickResult r) {
-                            Exception exception = r.getError();
-                            if (exception == null) {
-                                mItemModelList.get(adapterPosition).setBitmap(r.getBitmap());
-                                notifyItemChanged(adapterPosition);
-                            } else {
-                                Log.e(TAG, "onPickResult: ", exception);
-                            }
-                        }
-                    });
+            PickImageDialog.build(new PickSetup(), new IPickResult() {
+                @Override
+                public void onPickResult(PickResult pickResult) {
+                    Throwable exception = pickResult.getError();
+                    if (exception == null) {
+                        mItemModelList.get(adapterPosition).setBitmap(pickResult.getBitmap());
+                        notifyItemChanged(adapterPosition);
+                    } else {
+                        Log.e(TAG, "onPickResult: ", exception);
+                    }
+                }
+            }).show(getSupportFragmentManager());
         }
     }
 
