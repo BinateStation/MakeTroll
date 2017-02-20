@@ -319,9 +319,9 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT && hideUnwantedViews) {
             actionRemoveFrame.setVisibility(View.GONE);
         } else if (mItemModel != null && mItemModel.getViewType() == ViewType.TEXT && hideUnwantedViews) {
-            editLabelImageButton.setVisibility(View.GONE);
-            removeFrameImageButton.setVisibility(View.GONE);
-            actionBringToFront.setVisibility(View.GONE);
+            editLabelImageButton.setVisibility(View.INVISIBLE);
+            removeFrameImageButton.setVisibility(View.INVISIBLE);
+            actionBringToFront.setVisibility(View.INVISIBLE);
         }
     }
 
