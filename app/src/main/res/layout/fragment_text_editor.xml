@@ -9,9 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_vertical_margin"
-        android:background="@android:color/black">
+        android:fadeScrollbars="false"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarSize="@dimen/activity_vertical_margin"
+        android:scrollbars="horizontal">
 
-        <android.support.v7.widget.LinearLayoutCompat
+        <android.support.v7.widget.ButtonBarLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -22,7 +25,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/undo" />
+                android:src="@drawable/ic_undo_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_redo"
@@ -30,7 +33,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/redo" />
+                android:src="@drawable/ic_redo_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_bold"
@@ -38,7 +41,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/bold" />
+                android:src="@drawable/ic_format_bold_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_italic"
@@ -46,7 +49,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/italic" />
+                android:src="@drawable/ic_format_italic_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_subscript"
@@ -54,7 +57,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/subscript" />
+                android:src="@drawable/ic_subscript_text_formatting" />
 
             <ImageButton
                 android:id="@+id/action_superscript"
@@ -62,7 +65,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/superscript" />
+                android:src="@drawable/ic_superscript_text_formatting" />
 
             <ImageButton
                 android:id="@+id/action_strikethrough"
@@ -70,7 +73,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/strikethrough" />
+                android:src="@drawable/ic_strikethrough_s_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_underline"
@@ -78,55 +81,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/underline" />
-
-            <ImageButton
-                android:id="@+id/action_heading1"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h1" />
-
-            <ImageButton
-                android:id="@+id/action_heading2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h2" />
-
-            <ImageButton
-                android:id="@+id/action_heading3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h3" />
-
-            <ImageButton
-                android:id="@+id/action_heading4"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h4" />
-
-            <ImageButton
-                android:id="@+id/action_heading5"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h5" />
-
-            <ImageButton
-                android:id="@+id/action_heading6"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h6" />
+                android:src="@drawable/ic_format_underlined_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_txt_color"
@@ -134,7 +89,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/txt_color" />
+                android:src="@drawable/ic_format_color_text_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_bg_color"
@@ -142,7 +97,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/bg_color" />
+                android:src="@drawable/ic_format_color_fill_black_24dp" />
 
 
             <ImageButton
@@ -151,7 +106,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/indent" />
+                android:src="@drawable/ic_format_indent_increase_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_outdent"
@@ -159,7 +114,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/outdent" />
+                android:src="@drawable/ic_format_indent_decrease_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_align_left"
@@ -167,7 +122,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/justify_left" />
+                android:src="@drawable/ic_format_align_left_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_align_center"
@@ -175,7 +130,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/justify_center" />
+                android:src="@drawable/ic_format_align_center_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_align_right"
@@ -183,7 +138,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/justify_right" />
+                android:src="@drawable/ic_format_align_right_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_insert_bullets"
@@ -191,7 +146,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/bullets" />
+                android:src="@drawable/ic_format_list_bulleted_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_insert_numbers"
@@ -199,7 +154,7 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/numbers" />
+                android:src="@drawable/ic_format_list_numbered_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_blockquote"
@@ -207,33 +162,9 @@
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:src="@drawable/blockquote" />
+                android:src="@drawable/ic_format_quote_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/action_insert_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/insert_image" />
-
-            <ImageButton
-                android:id="@+id/action_insert_link"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/insert_link" />
-
-            <ImageButton
-                android:id="@+id/action_insert_checkbox"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@android:drawable/checkbox_on_background" />
-
-        </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.ButtonBarLayout>
     </HorizontalScrollView>
 
     <jp.wasabeef.richeditor.RichEditor

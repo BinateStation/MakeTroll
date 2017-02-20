@@ -140,48 +140,6 @@ public class TextEditorFragment extends DialogFragment {
             }
         });
 
-        view.findViewById(R.id.action_heading1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(1);
-            }
-        });
-
-        view.findViewById(R.id.action_heading2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(2);
-            }
-        });
-
-        view.findViewById(R.id.action_heading3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(3);
-            }
-        });
-
-        view.findViewById(R.id.action_heading4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(4);
-            }
-        });
-
-        view.findViewById(R.id.action_heading5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(5);
-            }
-        });
-
-        view.findViewById(R.id.action_heading6).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setHeading(6);
-            }
-        });
-
         view.findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
             private boolean isChanged;
 
@@ -255,27 +213,6 @@ public class TextEditorFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 mEditor.setNumbers();
-            }
-        });
-
-        view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.insertImage("http://www.1honeywan.com/dachshund/image/7.21/7.21_3_thumb.JPG",
-                        "dachshund");
-            }
-        });
-
-        view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.insertLink("https://github.com/wasabeef", "wasabeef");
-            }
-        });
-        view.findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.insertTodo();
             }
         });
 
