@@ -168,7 +168,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             });
             mLabelRichEditor.setEditorFontSize(22);
             mLabelRichEditor.setEditorFontColor(Color.WHITE);
-            mLabelRichEditor.setEditorBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMask));
+//            mLabelRichEditor.setEditorBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMask));
+            mLabelRichEditor.setEditorBackgroundColor(Color.TRANSPARENT);
             mLabelRichEditor.setHtml(getString(R.string.message));
 
             editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);

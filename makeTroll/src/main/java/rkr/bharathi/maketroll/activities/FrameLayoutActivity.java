@@ -90,7 +90,6 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
         } else if (i == R.id.FPFT_frame_label) {
             addCell(ViewType.TEXT);
-
         }
 
     }
