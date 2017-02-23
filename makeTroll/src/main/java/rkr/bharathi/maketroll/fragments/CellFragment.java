@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -34,6 +37,7 @@ import rkr.bharathi.maketroll.models.ViewType;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static android.view.MotionEvent.ACTION_DOWN;
+import static rkr.bharathi.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -237,9 +241,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         Log.d(TAG, "setHideUnwantedViews() called with: hideUnwantedViews = [" + hideUnwantedViews + "]");
         this.hideUnwantedViews = hideUnwantedViews;
         setView();
-        if (mItemModel.getViewType() != ViewType.TEXT && mItemModel.getBitmap() == null && mCellFragmentListener != null) {
-            mCellFragmentListener.remove(mPosition);
-        }
     }
 
     @Override
@@ -327,6 +328,23 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             Bitmap bitmap = mItemModel.getBitmap();
             if (bitmap != null) {
                 actionAddImage.setImageBitmap(bitmap);
+            } else if (mItemModel.getEndUrl() != null) {
+                String url = URL_LIVE_IMAGE + mItemModel.getEndUrl();
+                Context context = actionAddImage.getContext();
+                Glide.with(context)
+                        .load(url)
+                        .asBitmap()
+                        .placeholder(R.drawable.gallery)
+                        .error(R.drawable.gallery)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                actionAddImage.setImageBitmap(resource);
+                                mItemModel.setBitmap(resource);
+                                mAttache.update();
+                            }
+                        })
+                ;
             } else {
                 actionAddImage.setImageDrawable(ContextCompat.getDrawable(
                         actionAddImage.getContext(),

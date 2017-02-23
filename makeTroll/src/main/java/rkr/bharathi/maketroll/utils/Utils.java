@@ -1,7 +1,9 @@
 package rkr.bharathi.maketroll.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.io.File;
@@ -35,4 +37,33 @@ public class Utils {
         Log.d(TAG, "createImageFile() returned: " + image);
         return image;
     }
+
+    public static void showAlert(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    public static void showAlert(Context context, String title, String message, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(android.R.string.ok, onClickListener);
+        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+        builder.show();
+    }
+
 }

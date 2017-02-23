@@ -23,6 +23,7 @@ public class ItemModel implements Parcelable {
 
     private ViewType viewType;
     private Bitmap bitmap;
+    private String endUrl;
 
 
     public ItemModel(ViewType viewType) {
@@ -57,6 +58,14 @@ public class ItemModel implements Parcelable {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public String getEndUrl() {
+        return endUrl;
+    }
+
+    public void setEndUrl(String endUrl) {
+        this.endUrl = endUrl;
     }
 }
 

@@ -44,6 +44,7 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
 
     public void clearSelection() {
         selectedImages.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -56,7 +57,14 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (jsonArray != null) {
-            String url = URL_LIVE_IMAGE + jsonArray.optString(position);
+            final String key = jsonArray.optString(position);
+            if (selectedImages.contains(key)) {
+                holder.maskView.setVisibility(View.VISIBLE);
+            } else {
+                holder.maskView.setVisibility(View.INVISIBLE);
+            }
+
+            String url = URL_LIVE_IMAGE + key;
             Context context = holder.appCompatImageView.getContext();
             Glide.with(context)
                     .load(url)
@@ -65,6 +73,7 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
                     .crossFade()
                     .into(holder.appCompatImageView);
         }
+
     }
 
     @Override

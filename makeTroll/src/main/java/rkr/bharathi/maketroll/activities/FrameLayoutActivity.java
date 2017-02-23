@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,10 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,8 +32,8 @@ import rkr.bharathi.maketroll.models.ItemModel;
 import rkr.bharathi.maketroll.models.ViewType;
 import rkr.bharathi.maketroll.utils.Utils;
 
+import static rkr.bharathi.maketroll.utils.Utils.showAlert;
 import static rkr.bharathi.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
-import static rkr.bharathi.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE;
 
 public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener, CellFragment.CellFragmentListener {
 
@@ -113,24 +108,17 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void showAlertForPermission() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Alert");
-        builder.setMessage("To save this created image, we need permission to access your external storage..!");
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        showAlert(this, getString(android.R.string.dialog_alert_title), getString(R.string.external_directory_permission_alert_msg), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityCompat.requestPermissions(FrameLayoutActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    ActivityCompat.requestPermissions(FrameLayoutActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                }
             }
         });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
     }
 
     private void checkPermissionBeforeSaveImage() {
@@ -200,7 +188,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void onSaveCompleted() {
-        onBackPressed();
+        super.onBackPressed();
     }
 
     private void addCell(ViewType viewType) {
@@ -228,31 +216,38 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         pickFrameTypeFragment.show(getSupportFragmentManager(), pickFrameTypeFragment.getTag());
     }
 
-    private void putSelectedCells(ArrayList<String> itemModels) {
-        for (String itemModel : itemModels) {
-            getBitMapFromUrl(itemModel);
+    private void putSelectedCells(ArrayList<String> endUrls) {
+        for (String endUrl : endUrls) {
+            ItemModel itemModel = new ItemModel(ViewType.SQUARE);
+            itemModel.setEndUrl(endUrl);
+            addCell(itemModel);
         }
     }
 
-    private void addCell(ItemModel itemModel) {
+    private void addCell(final ItemModel itemModel) {
         if (mImageFrame != null) {
-            FrameLayout.LayoutParams layoutParams;
-            int width = mImageFrame.getWidth();
-            int height = mImageFrame.getHeight();
-            if (itemModel.getViewType() == ViewType.RECTANGLE) {
-                layoutParams = new FrameLayout.LayoutParams(width, height / 3);
-            } else if (itemModel.getViewType() == ViewType.TEXT) {
-                layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            } else {
-                layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
-            }
-            layoutParams.setMargins(50, 50, 0, 0);
-            CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, itemModel, mCellFragments.size());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
-                    .commit();
-            mCellFragments.add(cellFragment);
-            mImageFrame.invalidate();
+            mImageFrame.post(new Runnable() {
+                @Override
+                public void run() {
+                    FrameLayout.LayoutParams layoutParams;
+                    int width = mImageFrame.getWidth();
+                    int height = mImageFrame.getHeight();
+                    if (itemModel.getViewType() == ViewType.RECTANGLE) {
+                        layoutParams = new FrameLayout.LayoutParams(width, height / 3);
+                    } else if (itemModel.getViewType() == ViewType.TEXT) {
+                        layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    } else {
+                        layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
+                    }
+                    layoutParams.setMargins(50, 50, 0, 0);
+                    CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, itemModel, mCellFragments.size());
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
+                            .commit();
+                    mCellFragments.add(cellFragment);
+                    mImageFrame.invalidate();
+                }
+            });
         }
     }
 
@@ -272,18 +267,20 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         mImageFrame.invalidate();
     }
 
-    private void getBitMapFromUrl(String key) {
-        String url = URL_LIVE_IMAGE + key;
-        Glide.with(this)
-                .load(url)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
+    @Override
+    public void onBackPressed() {
+        showAlert(
+                this,
+                getString(android.R.string.dialog_alert_title),
+                getString(R.string.on_back_press_alert_message),
+                new DialogInterface.OnClickListener() {
                     @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        ItemModel itemModel = new ItemModel(ViewType.SQUARE);
-                        itemModel.setBitmap(bitmap);
-                        addCell(itemModel);
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            onSaveCompleted();
+                        }
                     }
-                });
+                }
+        );
     }
 }
