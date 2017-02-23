@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import rkr.bharathi.maketroll.R;
 import rkr.bharathi.maketroll.adapters.ImageListRecyclerViewAdapter;
-import rkr.bharathi.maketroll.models.ItemModel;
 import rkr.bharathi.maketroll.web.ServerResponseReceiver;
 import rkr.bharathi.maketroll.web.WebServiceUtils;
 
@@ -65,6 +64,7 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FIL_image_list_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter());
+        getImageList("");
     }
 
     @Override
@@ -107,10 +107,17 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
         }
     }
 
-    public ArrayList<ItemModel> getItemModels() {
+    public ArrayList<String> getItemModels() {
         if (mImageListRecyclerViewAdapter != null) {
             return mImageListRecyclerViewAdapter.getSelectedItemModel();
         }
         return null;
     }
+
+    public void clearSelection() {
+        if (mImageListRecyclerViewAdapter != null) {
+            mImageListRecyclerViewAdapter.clearSelection();
+        }
+    }
+
 }

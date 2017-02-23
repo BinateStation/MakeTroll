@@ -17,7 +17,6 @@ import rkr.bharathi.maketroll.R;
 import rkr.bharathi.maketroll.adapters.ViewPagerAdapter;
 import rkr.bharathi.maketroll.fragments.ImageListFragment;
 import rkr.bharathi.maketroll.fragments.MyCreationsFragment;
-import rkr.bharathi.maketroll.models.ItemModel;
 
 import static rkr.bharathi.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
@@ -60,10 +59,11 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "navigateToMakeTrollFrame() called");
         Intent intent = new Intent(this, FrameLayoutActivity.class);
         if (mImageListFragment != null) {
-            ArrayList<ItemModel> itemModels = mImageListFragment.getItemModels();
+            ArrayList<String> itemModels = mImageListFragment.getItemModels();
             if (itemModels != null && itemModels.size() > 0) {
-                intent.putParcelableArrayListExtra(KEY_ITEM_MODELS, itemModels);
+                intent.putStringArrayListExtra(KEY_ITEM_MODELS, itemModels);
             }
+            mImageListFragment.clearSelection();
         }
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

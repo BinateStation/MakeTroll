@@ -20,6 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,6 +38,7 @@ import rkr.bharathi.maketroll.models.ViewType;
 import rkr.bharathi.maketroll.utils.Utils;
 
 import static rkr.bharathi.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
+import static rkr.bharathi.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE;
 
 public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener, CellFragment.CellFragmentListener {
 
@@ -51,7 +56,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
         Intent intent = getIntent();
         if (intent.hasExtra(KEY_ITEM_MODELS)) {
-            ArrayList<ItemModel> itemModels = intent.getParcelableArrayListExtra(KEY_ITEM_MODELS);
+            ArrayList<String> itemModels = intent.getStringArrayListExtra(KEY_ITEM_MODELS);
             if (itemModels != null && itemModels.size() > 0) {
                 putSelectedCells(itemModels);
             }
@@ -218,9 +223,9 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         pickFrameTypeFragment.show(getSupportFragmentManager(), pickFrameTypeFragment.getTag());
     }
 
-    private void putSelectedCells(ArrayList<ItemModel> itemModels) {
-        for (ItemModel itemModel : itemModels) {
-            addCell(itemModel);
+    private void putSelectedCells(ArrayList<String> itemModels) {
+        for (String itemModel : itemModels) {
+            getBitMapFromUrl(itemModel);
         }
     }
 
@@ -257,5 +262,22 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                 .commit();
         mCellFragments.remove(position);
         mImageFrame.invalidate();
+    }
+
+    private void getBitMapFromUrl(String key) {
+        String url = URL_LIVE_IMAGE + key;
+        Glide.with(this)
+                .load(url)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        // Do something with bitmap here.
+                        ItemModel itemModel = new ItemModel(ViewType.SQUARE);
+                        itemModel.setBitmap(bitmap);
+                        addCell(itemModel);
+
+                    }
+                });
     }
 }
