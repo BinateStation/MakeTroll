@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -64,7 +62,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private ImageButton editLabelImageButton;
     private ImageButton removeFrameImageButton;
     private ImageButton actionBringToFront;
-    private TextView label;
 
     public CellFragment() {
         // Required empty public constructor
@@ -164,7 +161,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             setView();
         } else {
             mLabelRichEditor = (RichEditor) view.findViewById(R.id.CL_label);
-            label = (TextView) view.findViewById(R.id.CL_text);
             mLabelRichEditor.setFocusable(false);
             mLabelRichEditor.setFocusableInTouchMode(false);
             mLabelRichEditor.setOnTouchListener(new View.OnTouchListener() {
@@ -274,8 +270,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 if (mLabelRichEditor != null) {
                     mLabelRichEditor.setHtml(text);
                     mLabelRichEditor.refreshDrawableState();
-                    //noinspection deprecation
-                    label.setText(Html.fromHtml(text));
                 }
             }
         });
