@@ -45,6 +45,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     private static final String TAG = "FrameLayoutActivity";
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private FrameLayout mImageFrame;
+    private View mWaterMarkView;
     private List<CellFragment> mCellFragments = new ArrayList<>();
 
     @Override
@@ -53,6 +54,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_frame_layout);
 
         mImageFrame = (FrameLayout) findViewById(R.id.activity_frame_layout_image_frame);
+        mWaterMarkView = findViewById(R.id.AFL_water_mark);
 
         Intent intent = getIntent();
         if (intent.hasExtra(KEY_ITEM_MODELS)) {
@@ -103,7 +105,10 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         for (CellFragment cellFragment : mCellFragments) {
             cellFragment.setHideUnwantedViews(true);
         }
+        mWaterMarkView.setVisibility(View.VISIBLE);
+        mWaterMarkView.bringToFront();
         mImageFrame.setBackgroundColor(Color.WHITE);
+        mImageFrame.invalidate();
         checkPermissionBeforeSaveImage();
     }
 
@@ -230,22 +235,25 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void addCell(ItemModel itemModel) {
-        FrameLayout.LayoutParams layoutParams;
-        int width = mImageFrame.getWidth();
-        int height = mImageFrame.getHeight();
-        if (itemModel.getViewType() == ViewType.RECTANGLE) {
-            layoutParams = new FrameLayout.LayoutParams(width, height / 3);
-        } else if (itemModel.getViewType() == ViewType.TEXT) {
-            layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
+        if (mImageFrame != null) {
+            FrameLayout.LayoutParams layoutParams;
+            int width = mImageFrame.getWidth();
+            int height = mImageFrame.getHeight();
+            if (itemModel.getViewType() == ViewType.RECTANGLE) {
+                layoutParams = new FrameLayout.LayoutParams(width, height / 3);
+            } else if (itemModel.getViewType() == ViewType.TEXT) {
+                layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            } else {
+                layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
+            }
+            layoutParams.setMargins(50, 50, 0, 0);
+            CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, itemModel, mCellFragments.size());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
+                    .commit();
+            mCellFragments.add(cellFragment);
+            mImageFrame.invalidate();
         }
-        layoutParams.setMargins(50, 50, 0, 0);
-        CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, itemModel, mCellFragments.size());
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
-                .commit();
-        mCellFragments.add(cellFragment);
     }
 
 
@@ -272,11 +280,9 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        // Do something with bitmap here.
                         ItemModel itemModel = new ItemModel(ViewType.SQUARE);
                         itemModel.setBitmap(bitmap);
                         addCell(itemModel);
-
                     }
                 });
     }

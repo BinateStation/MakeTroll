@@ -9,8 +9,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this, HomeActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
 }

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -58,6 +60,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private ImageButton editLabelImageButton;
     private ImageButton removeFrameImageButton;
     private ImageButton actionBringToFront;
+    private TextView label;
 
     public CellFragment() {
         // Required empty public constructor
@@ -157,6 +160,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             setView();
         } else {
             mLabelRichEditor = (RichEditor) view.findViewById(R.id.CL_label);
+            label = (TextView) view.findViewById(R.id.CL_text);
             mLabelRichEditor.setFocusable(false);
             mLabelRichEditor.setFocusableInTouchMode(false);
             mLabelRichEditor.setOnTouchListener(new View.OnTouchListener() {
@@ -168,8 +172,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             });
             mLabelRichEditor.setEditorFontSize(22);
             mLabelRichEditor.setEditorFontColor(Color.WHITE);
-//            mLabelRichEditor.setEditorBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMask));
             mLabelRichEditor.setEditorBackgroundColor(Color.TRANSPARENT);
+            mLabelRichEditor.setTextBackgroundColor(Color.BLACK);
             mLabelRichEditor.setHtml(getString(R.string.message));
 
             editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
@@ -267,8 +271,10 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             @Override
             public void onDone(String text) {
                 if (mLabelRichEditor != null) {
-                    //noinspection deprecation
                     mLabelRichEditor.setHtml(text);
+                    mLabelRichEditor.refreshDrawableState();
+                    //noinspection deprecation
+                    label.setText(Html.fromHtml(text));
                 }
             }
         });

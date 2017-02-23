@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +23,7 @@ import rkr.bharathi.maketroll.adapters.ImageListRecyclerViewAdapter;
 import rkr.bharathi.maketroll.web.ServerResponseReceiver;
 import rkr.bharathi.maketroll.web.WebServiceUtils;
 
+import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static rkr.bharathi.maketroll.web.WebServiceConstants.KEY_DATA;
 import static rkr.bharathi.maketroll.web.WebServiceConstants.KEY_STATUS;
 
@@ -62,7 +63,7 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
         searchView.setOnQueryTextListener(this);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FIL_image_list_recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter());
         getImageList("");
     }

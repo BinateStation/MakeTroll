@@ -4,8 +4,8 @@ package rkr.bharathi.maketroll.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import rkr.bharathi.maketroll.R;
 import rkr.bharathi.maketroll.adapters.MyCreationsRecyclerViewAdapter;
+
+import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +49,7 @@ public class MyCreationsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FMC_recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter());
     }
 

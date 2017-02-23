@@ -23,6 +23,7 @@
             android:id="@+id/AH_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll"
             app:tabMode="fixed" />
     </android.support.design.widget.AppBarLayout>
 
