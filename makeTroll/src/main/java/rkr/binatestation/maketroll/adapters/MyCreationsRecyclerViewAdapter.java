@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import rkr.binatestation.maketroll.R;
+import rkr.binatestation.maketroll.fragments.dialogs.PreviewFragment;
 
 /**
  * Created by RKR on 22-02-2017.
@@ -28,8 +30,10 @@ import rkr.binatestation.maketroll.R;
 
 public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreationsRecyclerViewAdapter.ViewHolder> {
     private List<File> fileList = new ArrayList<>();
+    private FragmentManager mChildFragmentManager;
 
-    public MyCreationsRecyclerViewAdapter() {
+    public MyCreationsRecyclerViewAdapter(FragmentManager childFragmentManager) {
+        mChildFragmentManager = childFragmentManager;
     }
 
     public void setFileList(Context context) {
@@ -104,6 +108,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
             facebookShareAppCompatImageButton.setOnClickListener(this);
             actionRemoveFileAppCompatImageButton.setOnClickListener(this);
+            appCompatImageView.setOnClickListener(this);
         }
 
         @Override
@@ -112,7 +117,24 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                 shareToWhatsApp();
             } else if (v.getId() == R.id.AIMC_action_remove_file) {
                 deleteFile();
+            } else if (v.getId() == R.id.AIMC_image_view) {
+                loadPreviewDialog();
             }
+        }
+
+        private void loadPreviewDialog() {
+            PreviewFragment previewFragment = PreviewFragment.newInstance(fileList.get(getAdapterPosition()), new PreviewFragment.PreviewListener() {
+                @Override
+                public void shareToWhatsApp() {
+                    ViewHolder.this.shareToWhatsApp();
+                }
+
+                @Override
+                public void deleteFile() {
+                    ViewHolder.this.deleteFile();
+                }
+            });
+            previewFragment.show(mChildFragmentManager, previewFragment.getTag());
         }
 
         private void deleteFile() {
@@ -141,4 +163,5 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             }
         }
     }
+
 }

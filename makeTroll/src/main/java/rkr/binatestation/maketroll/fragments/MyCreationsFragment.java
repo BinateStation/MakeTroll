@@ -66,7 +66,7 @@ public class MyCreationsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FMC_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
-        recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter());
+        recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter(getChildFragmentManager()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
