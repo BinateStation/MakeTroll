@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="rkr.bharathi.maketroll.fragments.dialogs.PickFrameTypeFragment">
+    tools:context="rkr.binatestation.maketroll.fragments.dialogs.PickFrameTypeFragment">
 
     <View
         android:id="@+id/FPFT_frame_square"

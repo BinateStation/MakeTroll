@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    tools:context="rkr.bharathi.maketroll.fragments.dialogs.ScaleFragment">
+    tools:context="rkr.binatestation.maketroll.fragments.dialogs.ScaleFragment">
 
     <TextView
         android:id="@+id/FS_label_width"

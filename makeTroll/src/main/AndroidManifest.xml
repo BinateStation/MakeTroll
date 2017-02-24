@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="rkr.bharathi.maketroll">
+    package="rkr.binatestation.maketroll">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,16 +23,16 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".activities.FrameLayoutActivity" />
+        <activity android:name="rkr.binatestation.maketroll.activities.FrameLayoutActivity" />
         <activity
-            android:name=".activities.HomeActivity"
+            android:name="rkr.binatestation.maketroll.activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".web.WebService" />
+        <service android:name="rkr.binatestation.maketroll.web.WebService" />
 
         <activity
-            android:name=".activities.SplashActivity"
+            android:name="rkr.binatestation.maketroll.activities.SplashActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>

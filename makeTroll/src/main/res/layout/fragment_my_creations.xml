@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rkr.bharathi.maketroll.fragments.MyCreationsFragment">
+    tools:context="rkr.binatestation.maketroll.fragments.MyCreationsFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/FMC_recycler_view"
