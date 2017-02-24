@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:orientation="vertical">
 
 
@@ -47,11 +48,12 @@
                 android:src="@drawable/ic_cancel_black_24dp" />
         </android.support.v7.widget.LinearLayoutCompat>
 
-
-        <jp.wasabeef.richeditor.RichEditor
+        <TextView
             android:id="@+id/CL_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/CL_action_edit" />
+            android:background="@color/colorMask"
+            android:text="@string/title_activity_home"
+            android:textColor="@android:color/white" />
     </android.support.v7.widget.LinearLayoutCompat>
 </android.support.v7.widget.CardView>

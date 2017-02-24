@@ -3,6 +3,7 @@ package rkr.binatestation.maketroll.fragments.dialogs;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
-import jp.wasabeef.richeditor.RichEditor;
 import rkr.binatestation.maketroll.R;
 import yuku.ambilwarna.AmbilWarnaDialog;
+
+import static rkr.binatestation.maketroll.utils.Utils.setTextStyle;
 
 /**
  * Dialog fragment to add text
@@ -27,27 +31,45 @@ public class TextEditorFragment extends DialogFragment {
 
     private static final String KEY_TEXT = "text";
 
-    private RichEditor mEditor;
     private TextEditorListener mTextEditorListener;
+    private int mTextColor = Color.WHITE;
+    private int mBgColor = Color.GRAY;
+    private float mTextSize = 12;
+    private boolean mIsBold;
+    private boolean mIsItalic;
+    private boolean mIsUnderLine;
+    private boolean mIsStrikeThru;
+
+    private EditText mEditor;
+    private ImageButton mActionBoldImageButton;
+    private ImageButton mActionItalicImageButton;
+    private ImageButton mActionUnderLine;
+    private ImageButton mActionStrikeThru;
 
     public TextEditorFragment() {
         // Required empty public constructor
     }
 
-    public static TextEditorFragment newInstance(String text, TextEditorListener textEditorListener) {
+    public static TextEditorFragment newInstance(String text, int textColor, int bgColor, float textSize, boolean isBold, boolean isItalic, boolean isUnderLine, boolean isStrikeThru, TextEditorListener textEditorListener) {
         Log.d(TAG, "newInstance() called");
         Bundle args = new Bundle();
         args.putString(KEY_TEXT, text);
         TextEditorFragment fragment = new TextEditorFragment();
         fragment.setArguments(args);
         fragment.mTextEditorListener = textEditorListener;
+        fragment.mTextColor = textColor;
+        fragment.mBgColor = bgColor;
+        fragment.mTextSize = textSize;
+        fragment.mIsBold = isBold;
+        fragment.mIsItalic = isItalic;
+        fragment.mIsUnderLine = isUnderLine;
+        fragment.mIsStrikeThru = isStrikeThru;
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @NonNull
@@ -73,72 +95,73 @@ public class TextEditorFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mEditor = (RichEditor) view.findViewById(R.id.FTE_editor);
-        mEditor.setEditorHeight(200);
-        mEditor.setEditorFontSize(22);
-        mEditor.setEditorFontColor(Color.BLACK);
-        mEditor.setPadding(10, 10, 10, 10);
+        mEditor = (EditText) view.findViewById(R.id.FTE_editor);
+        mActionBoldImageButton = (ImageButton) view.findViewById(R.id.action_bold);
+        mActionItalicImageButton = (ImageButton) view.findViewById(R.id.action_italic);
+        mActionUnderLine = (ImageButton) view.findViewById(R.id.action_underline);
+        mActionStrikeThru = (ImageButton) view.findViewById(R.id.action_strike_thru);
+
+        mEditor.setTextColor(mTextColor);
+        mEditor.setBackgroundColor(mBgColor);
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_TEXT)) {
-            mEditor.setHtml(bundle.getString(KEY_TEXT));
+            mEditor.setText(bundle.getString(KEY_TEXT));
         } else {
-            mEditor.setPlaceholder("Insert text here...");
+            mEditor.setHint("Insert text here...");
         }
+        setTextStyle(mEditor, mIsBold, mIsItalic);
+        setTextUnderLine(mIsUnderLine);
+        setTextStrikeThru(mIsStrikeThru);
 
-
-        view.findViewById(R.id.action_undo).setOnClickListener(new View.OnClickListener() {
+        mActionBoldImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.undo();
+                if (mActionBoldImageButton.isSelected()) {
+                    mActionBoldImageButton.setSelected(false);
+                    setTextStyle(mEditor, false, mActionItalicImageButton.isSelected());
+                } else {
+                    mActionBoldImageButton.setSelected(true);
+                    setTextStyle(mEditor, true, mActionItalicImageButton.isSelected());
+                }
             }
         });
 
-        view.findViewById(R.id.action_redo).setOnClickListener(new View.OnClickListener() {
+        mActionItalicImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.redo();
+                if (mActionItalicImageButton.isSelected()) {
+                    mActionItalicImageButton.setSelected(false);
+                    setTextStyle(mEditor, mActionBoldImageButton.isSelected(), false);
+                } else {
+                    mActionItalicImageButton.setSelected(true);
+                    setTextStyle(mEditor, mActionBoldImageButton.isSelected(), true);
+                }
             }
         });
 
-        view.findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+        mActionUnderLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.setBold();
+                setTextUnderLine(!mActionUnderLine.isSelected());
+            }
+        });
+        mActionStrikeThru.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTextStrikeThru(!mActionStrikeThru.isSelected());
             }
         });
 
-        view.findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.action_txt_size).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.setItalic();
-            }
-        });
-
-        view.findViewById(R.id.action_subscript).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setSubscript();
-            }
-        });
-
-        view.findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setSuperscript();
-            }
-        });
-
-        view.findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setStrikeThrough();
-            }
-        });
-
-        view.findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setUnderline();
+                showSizePicker(new NumberPickerFragment.NumberPickerListener() {
+                    @Override
+                    public void onDone(int number) {
+                        mEditor.setTextSize(number);
+                        mTextSize = number;
+                    }
+                });
             }
         });
 
@@ -153,6 +176,7 @@ public class TextEditorFragment extends DialogFragment {
                     @Override
                     public void onOk(AmbilWarnaDialog dialog, int color) {
                         mEditor.setTextColor(color);
+                        mTextColor = color;
                     }
                 });
             }
@@ -161,72 +185,17 @@ public class TextEditorFragment extends DialogFragment {
         view.findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showColorPicker(Color.TRANSPARENT, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                showColorPicker(Color.GRAY, new AmbilWarnaDialog.OnAmbilWarnaListener() {
                     @Override
                     public void onCancel(AmbilWarnaDialog dialog) {
                     }
 
                     @Override
                     public void onOk(AmbilWarnaDialog dialog, int color) {
-                        mEditor.setTextBackgroundColor(color);
+                        mEditor.setBackgroundColor(color);
+                        mBgColor = color;
                     }
                 });
-            }
-        });
-
-        view.findViewById(R.id.action_indent).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setIndent();
-            }
-        });
-
-        view.findViewById(R.id.action_outdent).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setOutdent();
-            }
-        });
-
-        view.findViewById(R.id.action_align_left).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setAlignLeft();
-            }
-        });
-
-        view.findViewById(R.id.action_align_center).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setAlignCenter();
-            }
-        });
-
-        view.findViewById(R.id.action_align_right).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setAlignRight();
-            }
-        });
-
-        view.findViewById(R.id.action_blockquote).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setBlockquote();
-            }
-        });
-
-        view.findViewById(R.id.action_insert_bullets).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setBullets();
-            }
-        });
-
-        view.findViewById(R.id.action_insert_numbers).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEditor.setNumbers();
             }
         });
 
@@ -235,7 +204,16 @@ public class TextEditorFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (mTextEditorListener != null) {
-                    mTextEditorListener.onDone(mEditor.getHtml());
+                    mTextEditorListener.onDone(
+                            mEditor.getText().toString(),
+                            mActionBoldImageButton.isSelected(),
+                            mActionItalicImageButton.isSelected(),
+                            mActionUnderLine.isSelected(),
+                            mActionStrikeThru.isSelected(),
+                            mTextSize,
+                            mTextColor,
+                            mBgColor
+                    );
                 }
                 dismiss();
             }
@@ -248,7 +226,46 @@ public class TextEditorFragment extends DialogFragment {
         ambilWarnaDialog.show();
     }
 
+    private void showSizePicker(NumberPickerFragment.NumberPickerListener numberPickerListener) {
+        NumberPickerFragment numberPickerFragment = NumberPickerFragment.newInstance(
+                12,
+                100,
+                (int) mTextSize,
+                numberPickerListener
+        );
+        numberPickerFragment.show(getChildFragmentManager(), numberPickerFragment.getTag());
+    }
+
+
+    private void setTextUnderLine(boolean isUnderLine) {
+        if (isUnderLine) {
+            mActionUnderLine.setSelected(true);
+            if (mActionStrikeThru.isSelected()) {
+                mEditor.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                mEditor.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            }
+        } else {
+            mActionUnderLine.setSelected(false);
+            mEditor.setPaintFlags(mEditor.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+        }
+    }
+
+    private void setTextStrikeThru(boolean isStrikeThru) {
+        if (isStrikeThru) {
+            mActionStrikeThru.setSelected(true);
+            if (mActionUnderLine.isSelected()) {
+                mEditor.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.UNDERLINE_TEXT_FLAG);
+            } else {
+                mEditor.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+        } else {
+            mActionStrikeThru.setSelected(false);
+            mEditor.setPaintFlags(mEditor.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+    }
+
     public interface TextEditorListener {
-        void onDone(String text);
+        void onDone(String text, boolean isBold, boolean isItalic, boolean isUnderLine, boolean isStrikeThru, float textSize, int textColor, int bgColor);
     }
 }

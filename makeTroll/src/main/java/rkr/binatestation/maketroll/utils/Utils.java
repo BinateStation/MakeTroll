@@ -2,9 +2,11 @@ package rkr.binatestation.maketroll.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +66,18 @@ public class Utils {
         builder.setPositiveButton(android.R.string.ok, onClickListener);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
         builder.show();
+    }
+
+    public static void setTextStyle(TextView textView, boolean isBold, boolean isItalic) {
+        if (isBold && isItalic) {
+            textView.setTypeface(Typeface.DEFAULT, Typeface.BOLD_ITALIC);
+        } else if (isBold) {
+            textView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        } else if (isItalic) {
+            textView.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
+        } else {
+            textView.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+        }
     }
 
 }

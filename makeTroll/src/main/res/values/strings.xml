@@ -1,5 +1,4 @@
 <resources>
-    <string name="add_frame">Add Frame</string>
     <string name="save">Save</string>
 
     <string name="remove_frame">Remove frame</string>
@@ -8,8 +7,6 @@
     <string name="width">Width</string>
     <string name="height">Height</string>
     <string name="add_label">Add Label</string>
-    <string name="switch_activity">Switch Activity</string>
-    <string name="message">Message</string>
     <string name="edit">Edit</string>
     <string name="title_activity_home">Troll Maker</string>
 
@@ -23,4 +20,7 @@
     <string name="created_by_troll_maker">Created by Troll Maker</string>
     <string name="external_directory_permission_alert_msg">To save this created image, we need permission to access your external storage..!</string>
     <string name="on_back_press_alert_message">Are you sure you want to exit without saving this image ?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

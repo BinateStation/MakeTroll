@@ -11,29 +11,12 @@
         android:layout_margin="@dimen/activity_vertical_margin"
         android:fadeScrollbars="false"
         android:overScrollMode="ifContentScrolls"
-        android:scrollbarSize="@dimen/activity_vertical_margin"
         android:scrollbars="horizontal">
 
         <android.support.v7.widget.ButtonBarLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/action_undo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_undo_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_redo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_redo_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_bold"
@@ -60,12 +43,20 @@
                 android:src="@drawable/ic_format_underlined_black_24dp" />
 
             <ImageButton
-                android:id="@+id/action_strikethrough"
+                android:id="@+id/action_strike_thru"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_strikethrough_s_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/action_txt_size"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_format_size_black_24dp" />
 
             <ImageButton
                 android:id="@+id/action_txt_color"
@@ -83,97 +74,18 @@
                 android:contentDescription="@null"
                 android:src="@drawable/ic_format_color_fill_black_24dp" />
 
-
-            <ImageButton
-                android:id="@+id/action_indent"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_indent_increase_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_outdent"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_indent_decrease_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_align_left"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_align_left_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_align_center"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_align_center_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_align_right"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_align_right_black_24dp" />
-
-
-            <ImageButton
-                android:id="@+id/action_subscript"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_subscript_text_formatting" />
-
-            <ImageButton
-                android:id="@+id/action_superscript"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_superscript_text_formatting" />
-
-            <ImageButton
-                android:id="@+id/action_insert_bullets"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_list_bulleted_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_insert_numbers"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_list_numbered_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/action_blockquote"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_format_quote_black_24dp" />
-
         </android.support.v7.widget.ButtonBarLayout>
     </HorizontalScrollView>
 
-    <jp.wasabeef.richeditor.RichEditor
+    <EditText
         android:id="@+id/FTE_editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/FTE_toolbar"
-        android:layout_margin="@dimen/activity_vertical_margin" />
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:imeOptions="actionDone"
+        android:inputType="text|textMultiLine"
+        android:selectAllOnFocus="true" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/FTE_done"

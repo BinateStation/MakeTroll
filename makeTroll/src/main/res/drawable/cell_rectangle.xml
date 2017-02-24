@@ -10,5 +10,5 @@
         android:left="@dimen/frame_padding"
         android:right="@dimen/frame_padding"
         android:top="@dimen/frame_padding" />
-    <solid android:color="@android:color/white" />
+    <solid android:color="@android:color/transparent" />
 </shape>
