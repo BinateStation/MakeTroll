@@ -1,6 +1,7 @@
 package rkr.binatestation.maketroll.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.MyCreationsRecyclerViewAdapter;
+import rkr.binatestation.maketroll.interfaces.FabBehaviour;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
@@ -24,6 +26,7 @@ public class MyCreationsFragment extends Fragment {
     private static final String TAG = "MyCreationsFragment";
 
     private MyCreationsRecyclerViewAdapter mMyCreationsRecyclerViewAdapter;
+    private FabBehaviour mFabBehaviour;
 
     public MyCreationsFragment() {
         // Required empty public constructor
@@ -39,6 +42,19 @@ public class MyCreationsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FabBehaviour) {
+            mFabBehaviour = (FabBehaviour) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mFabBehaviour = null;
+        super.onDetach();
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -51,6 +67,23 @@ public class MyCreationsFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FMC_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter());
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && mFabBehaviour != null) {
+                    mFabBehaviour.show();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 || dy < 0 && mFabBehaviour != null) {
+                    mFabBehaviour.hide();
+                }
+            }
+        });
     }
 
     @Override

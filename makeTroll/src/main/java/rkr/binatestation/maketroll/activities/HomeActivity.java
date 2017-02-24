@@ -17,12 +17,14 @@ import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ViewPagerAdapter;
 import rkr.binatestation.maketroll.fragments.ImageListFragment;
 import rkr.binatestation.maketroll.fragments.MyCreationsFragment;
+import rkr.binatestation.maketroll.interfaces.FabBehaviour;
 
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements FabBehaviour {
     private static final String TAG = "HomeActivity";
     private ImageListFragment mImageListFragment;
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,9 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.AH_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
-        fab.setColorFilter(Color.WHITE);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
+        mFab.setColorFilter(Color.WHITE);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateToMakeTrollFrame();
@@ -50,8 +52,8 @@ public class HomeActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         Log.d(TAG, "setupViewPager() called with: viewPager = [" + viewPager + "]");
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(MyCreationsFragment.newInstance(), getString(R.string.my_creations));
         adapter.addFrag(mImageListFragment = ImageListFragment.newInstance(), getString(R.string.images));
+        adapter.addFrag(MyCreationsFragment.newInstance(), getString(R.string.my_creations));
         viewPager.setAdapter(adapter);
     }
 
@@ -67,5 +69,19 @@ public class HomeActivity extends AppCompatActivity {
         }
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    @Override
+    public void show() {
+        if (mFab != null && !mFab.isShown()) {
+            mFab.show();
+        }
+    }
+
+    @Override
+    public void hide() {
+        if (mFab != null && mFab.isShown()) {
+            mFab.hide();
+        }
     }
 }
