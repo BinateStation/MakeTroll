@@ -23,16 +23,16 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name="rkr.binatestation.maketroll.activities.FrameLayoutActivity" />
+        <activity android:name=".activities.FrameLayoutActivity" />
         <activity
-            android:name="rkr.binatestation.maketroll.activities.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name="rkr.binatestation.maketroll.web.WebService" />
+        <service android:name=".web.WebService" />
 
         <activity
-            android:name="rkr.binatestation.maketroll.activities.SplashActivity"
+            android:name=".activities.SplashActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
@@ -41,6 +41,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.HelpActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

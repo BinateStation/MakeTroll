@@ -63,6 +63,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_frame, menu);
+        getMenuInflater().inflate(R.menu.menu_help, menu);
         return true;
     }
 
@@ -76,6 +77,9 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                 if (mImageFrame != null) {
                     hideUnwantedViews();
                 }
+                return true;
+            case R.id.MH_action_help:
+                startActivity(new Intent(this, HelpActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.AH_toolbar);
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         mFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
@@ -47,6 +50,21 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager, true);
         setupViewPager(viewPager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_help, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.MH_action_help) {
+            startActivity(new Intent(this, HelpActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupViewPager(ViewPager viewPager) {
