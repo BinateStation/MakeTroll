@@ -27,6 +27,7 @@
             tools:visibility="visible">
 
             <TextView
+                style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/created_by_troll_maker"
