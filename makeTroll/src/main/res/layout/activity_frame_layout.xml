@@ -22,8 +22,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/frame_padding"
             android:visibility="gone"
             app:cardBackgroundColor="@color/colorMask"
+            app:contentPadding="@dimen/frame_padding"
             tools:visibility="visible">
 
             <TextView

@@ -17,7 +17,7 @@
     <string name="search">Search</string>
     <string name="share_to_whats_app">Share to Whats App</string>
     <string name="share_to_facebook">Share to Facebook</string>
-    <string name="created_using_troll_maker">Created using Troll Maker</string>
+    <string name="created_using_troll_maker">Created Using Troll Maker</string>
     <string name="external_directory_permission_alert_msg">To save this created image, we need permission to access your external storage..!</string>
     <string name="on_back_press_alert_message">Are you sure you want to exit without saving this image ?</string>
 
