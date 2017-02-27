@@ -1,6 +1,7 @@
 package rkr.binatestation.maketroll.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.fragments.dialogs.PreviewFragment;
+import rkr.binatestation.maketroll.utils.Utils;
 
 /**
  * Created by RKR on 22-02-2017.
@@ -138,12 +140,28 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
 
         private void deleteFile() {
-            File file = fileList.get(getAdapterPosition());
-            if (file != null && file.exists() && file.isFile()) {
-                if (file.delete()) {
-                    fileList.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
-                }
+            Context context = itemView.getContext();
+            if (context != null) {
+                Utils.showAlert(
+                        context,
+                        context.getString(android.R.string.dialog_alert_title),
+                        context.getString(R.string.delete_image_confirmation_msg),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (DialogInterface.BUTTON_POSITIVE == which) {
+                                    File file = fileList.get(getAdapterPosition());
+                                    if (file != null && file.exists() && file.isFile()) {
+                                        if (file.delete()) {
+                                            fileList.remove(getAdapterPosition());
+                                            notifyItemRemoved(getAdapterPosition());
+                                        }
+                                    }
+                                }
+                                dialog.dismiss();
+                            }
+                        }
+                );
             }
         }
 

@@ -75,7 +75,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                 return true;
             case R.id.MCF_save_frame:
                 if (mImageFrame != null) {
-                    hideUnwantedViews();
+                    confirmBeforeSaveFrame();
                 }
                 return true;
             case R.id.MH_action_help:
@@ -100,6 +100,23 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    private void confirmBeforeSaveFrame() {
+        showAlert(
+                this,
+                getString(android.R.string.dialog_alert_title),
+                getString(R.string.save_confirmation_msg),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (DialogInterface.BUTTON_POSITIVE == which) {
+                            hideUnwantedViews();
+                        }
+                        dialog.dismiss();
+                    }
+                }
+        );
+    }
+
     private void hideUnwantedViews() {
         for (CellFragment cellFragment : mCellFragments) {
             cellFragment.setHideUnwantedViews(true);
@@ -107,6 +124,8 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         mWaterMarkView.setVisibility(View.VISIBLE);
         mWaterMarkView.bringToFront();
         mImageFrame.setBackgroundColor(Color.WHITE);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        mImageFrame.setLayoutParams(layoutParams);
         mImageFrame.invalidate();
         checkPermissionBeforeSaveImage();
     }
