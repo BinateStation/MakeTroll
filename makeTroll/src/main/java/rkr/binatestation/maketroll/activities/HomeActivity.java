@@ -33,7 +33,6 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.AH_toolbar);
-        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         mFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);

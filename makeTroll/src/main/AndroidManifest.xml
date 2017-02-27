@@ -8,6 +8,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/title_activity_home"
         android:supportsRtl="true"
@@ -39,6 +40,23 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.piclo.in/trollmaker/” -->
+                <data
+                    android:host="www.piclo.in"
+                    android:pathPrefix="/trollmaker"
+                    android:scheme="http" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data
+                    android:host="trollmaker"
+                    android:scheme="rkr.binatestation" />
+
             </intent-filter>
         </activity>
         <activity

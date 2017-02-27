@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "973869661322",
+    "firebase_url": "https://troll-maker-e4dbb.firebaseio.com",
+    "project_id": "troll-maker-e4dbb",
+    "storage_bucket": "troll-maker-e4dbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973869661322:android:095a64c6b30da132",
+        "android_client_info": {
+          "package_name": "rkr.binatestation.maketroll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973869661322-08qfof4sakvfenqbof6oj8oii76gn42r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rkr.binatestation.maketroll",
+            "certificate_hash": "3484a652489f47d423f9723bb69f2a255211fff2"
+          }
+        },
+        {
+          "client_id": "973869661322-d83th0lrpil5hrtoghbfta2tc1aqc1r6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7YnJ3dswjLuL1ISIWwmb7Ch1dq7Sjd-w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973869661322-d83th0lrpil5hrtoghbfta2tc1aqc1r6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
