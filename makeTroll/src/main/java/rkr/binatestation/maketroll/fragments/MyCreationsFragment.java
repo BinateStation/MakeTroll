@@ -2,6 +2,7 @@ package rkr.binatestation.maketroll.fragments;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,16 +13,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
+
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.MyCreationsRecyclerViewAdapter;
 import rkr.binatestation.maketroll.interfaces.FabBehaviour;
+import rkr.binatestation.maketroll.interfaces.FbShareListener;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyCreationsFragment extends Fragment {
+public class MyCreationsFragment extends Fragment implements FbShareListener {
 
     private static final String TAG = "MyCreationsFragment";
 
@@ -54,6 +60,7 @@ public class MyCreationsFragment extends Fragment {
         mFabBehaviour = null;
         super.onDetach();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +73,7 @@ public class MyCreationsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FMC_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
-        recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter(getChildFragmentManager()));
+        recyclerView.setAdapter(mMyCreationsRecyclerViewAdapter = new MyCreationsRecyclerViewAdapter(getChildFragmentManager(), this));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -93,4 +100,18 @@ public class MyCreationsFragment extends Fragment {
             mMyCreationsRecyclerViewAdapter.setFileList(getContext());
         }
     }
+
+    @Override
+    public void shareToFacebook(Uri uri) {
+        if (ShareDialog.canShow(SharePhotoContent.class)) {
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setImageUrl(uri)
+                    .build();
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+            ShareDialog.show(this, content);
+        }
+    }
+
 }

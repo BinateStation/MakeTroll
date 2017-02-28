@@ -84,6 +84,10 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
             if (mPreviewListener != null) {
                 mPreviewListener.shareToWhatsApp();
             }
+        } else if (v.getId() == R.id.AIMC_fbShare) {
+            if (mPreviewListener != null) {
+                mPreviewListener.shareToFb();
+            }
         } else if (v.getId() == R.id.AIMC_action_remove_file) {
             if (mPreviewListener != null) {
                 mPreviewListener.deleteFile();
@@ -95,6 +99,8 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
         void shareToWhatsApp();
 
         void deleteFile();
+
+        void shareToFb();
     }
 
 }

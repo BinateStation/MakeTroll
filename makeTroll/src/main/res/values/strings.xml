@@ -1,6 +1,6 @@
 <resources>
     <string name="save">Save</string>
-
+    <string name="facebook_app_id">1648722521825995</string>
     <string name="remove_frame">Remove frame</string>
     <string name="view_drag_helper">View Drag helper</string>
     <string name="done">Done</string>

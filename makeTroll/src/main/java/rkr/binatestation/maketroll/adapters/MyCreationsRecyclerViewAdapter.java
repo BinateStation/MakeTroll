@@ -23,6 +23,7 @@ import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.fragments.dialogs.PreviewFragment;
+import rkr.binatestation.maketroll.interfaces.FbShareListener;
 import rkr.binatestation.maketroll.utils.Utils;
 
 /**
@@ -33,9 +34,11 @@ import rkr.binatestation.maketroll.utils.Utils;
 public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreationsRecyclerViewAdapter.ViewHolder> {
     private List<File> fileList = new ArrayList<>();
     private FragmentManager mChildFragmentManager;
+    private FbShareListener mFbShareListener;
 
-    public MyCreationsRecyclerViewAdapter(FragmentManager childFragmentManager) {
+    public MyCreationsRecyclerViewAdapter(FragmentManager childFragmentManager, FbShareListener fbShareListener) {
         mChildFragmentManager = childFragmentManager;
+        mFbShareListener = fbShareListener;
     }
 
     public void setFileList(Context context) {
@@ -117,6 +120,8 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         public void onClick(View v) {
             if (v.getId() == R.id.AIMC_whatsAppShare) {
                 shareToWhatsApp();
+            } else if (v.getId() == R.id.AIMC_fbShare) {
+                shareFb();
             } else if (v.getId() == R.id.AIMC_action_remove_file) {
                 deleteFile();
             } else if (v.getId() == R.id.AIMC_image_view) {
@@ -134,6 +139,11 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                 @Override
                 public void deleteFile() {
                     ViewHolder.this.deleteFile();
+                }
+
+                @Override
+                public void shareToFb() {
+                    ViewHolder.this.shareFb();
                 }
             });
             previewFragment.show(mChildFragmentManager, previewFragment.getTag());
@@ -180,6 +190,15 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                 }
             }
         }
-    }
 
+        private void shareFb() {
+            if (mFbShareListener != null) {
+                File file = fileList.get(getAdapterPosition());
+                if (file != null) {
+                    Uri uri = Uri.fromFile(file);
+                    mFbShareListener.shareToFacebook(uri);
+                }
+            }
+        }
+    }
 }
