@@ -4,11 +4,34 @@
     android:layout_height="match_parent"
     tools:context="rkr.binatestation.maketroll.fragments.dialogs.TextEditorFragment">
 
+    <EditText
+        android:id="@+id/FTE_editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FTE_toolbar"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:imeOptions="actionDone"
+        android:inputType="text|textMultiLine"
+        android:selectAllOnFocus="true" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/FTE_done"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/FTE_editor"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:text="@string/done" />
+
     <HorizontalScrollView
         android:id="@+id/FTE_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_alignLeft="@+id/FTE_editor"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/FTE_editor"
+        android:layout_marginTop="16dp"
         android:fadeScrollbars="false"
         android:overScrollMode="ifContentScrolls"
         android:scrollbars="horizontal">
@@ -43,14 +66,6 @@
                 android:src="@drawable/ic_format_underlined_black_24dp" />
 
             <ImageButton
-                android:id="@+id/action_strike_thru"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_strikethrough_s_black_24dp" />
-
-            <ImageButton
                 android:id="@+id/action_txt_size"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -76,26 +91,6 @@
 
         </android.support.v7.widget.ButtonBarLayout>
     </HorizontalScrollView>
-
-    <EditText
-        android:id="@+id/FTE_editor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/FTE_toolbar"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:imeOptions="actionDone"
-        android:inputType="text|textMultiLine"
-        android:selectAllOnFocus="true" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/FTE_done"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/FTE_editor"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:text="@string/done" />
 
 
 </RelativeLayout>

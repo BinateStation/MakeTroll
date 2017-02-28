@@ -1,4 +1,4 @@
-package rkr.binatestation.maketroll.fragments;
+package rkr.binatestation.maketroll.fragments.dialogs;
 
 
 import android.content.Context;

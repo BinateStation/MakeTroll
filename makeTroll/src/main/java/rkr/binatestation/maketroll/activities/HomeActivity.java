@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ViewPagerAdapter;
-import rkr.binatestation.maketroll.fragments.ImageListFragment;
 import rkr.binatestation.maketroll.fragments.MyCreationsFragment;
+import rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment;
 import rkr.binatestation.maketroll.interfaces.FabBehaviour;
 
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;

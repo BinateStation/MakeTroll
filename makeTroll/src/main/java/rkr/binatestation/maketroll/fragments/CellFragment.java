@@ -71,7 +71,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private boolean mIsBold;
     private boolean mIsItalic;
     private boolean mIsUnderLine;
-    private boolean mIsStrikeThru;
 
     public CellFragment() {
         // Required empty public constructor
@@ -272,10 +271,9 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 mIsBold,
                 mIsItalic,
                 mIsUnderLine,
-                mIsStrikeThru,
                 new TextEditorFragment.TextEditorListener() {
                     @Override
-                    public void onDone(String text, boolean isBold, boolean isItalic, boolean isUnderLine, boolean isStrikeThru, float textSize, int textColor, int bgColor) {
+                    public void onDone(String text, boolean isBold, boolean isItalic, boolean isUnderLine, float textSize, int textColor, int bgColor) {
                         mIsBold = isBold;
                         mIsItalic = isItalic;
                         mIsUnderLine = isUnderLine;
@@ -283,7 +281,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                         mTextColor = textColor;
                         mBgColor = bgColor;
                         mTextSize = textSize;
-                        mIsStrikeThru = isStrikeThru;
 
                         if (mLabelTextView != null) {
                             mLabelTextView.setTextColor(textColor);
@@ -291,20 +288,16 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                             mLabelTextView.setTextSize(textSize);
                             mLabelTextView.setText(text);
                             setTextStyle(mLabelTextView, isBold, isItalic);
-                            setTextPaintFlags(mLabelTextView, isUnderLine, isStrikeThru);
+                            setTextPaintFlags(mLabelTextView, isUnderLine);
                         }
                     }
                 });
         textEditorFragment.show(getChildFragmentManager(), textEditorFragment.getTag());
     }
 
-    private void setTextPaintFlags(TextView labelTextView, boolean isUnderLine, boolean isStrikeThru) {
-        if (isUnderLine && isStrikeThru) {
-            labelTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else if (isUnderLine) {
+    private void setTextPaintFlags(TextView labelTextView, boolean isUnderLine) {
+        if (isUnderLine) {
             labelTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        } else if (isStrikeThru) {
-            labelTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }
 

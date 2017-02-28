@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="rkr.binatestation.maketroll.fragments.ImageListFragment">
+    tools:context="rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/FIL_toolbar_layout"

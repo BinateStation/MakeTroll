@@ -18,7 +18,9 @@ import android.view.ViewGroup;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rkr.binatestation.maketroll.R;
@@ -51,6 +53,14 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                 }
             });
             this.fileList.clear();
+            if (fileList != null && fileList.length > 1) {
+                Arrays.sort(fileList, new Comparator<File>() {
+                    @Override
+                    public int compare(File object1, File object2) {
+                        return (int) ((object1.lastModified() > object2.lastModified()) ? object1.lastModified() : object2.lastModified());
+                    }
+                });
+            }
             Collections.addAll(this.fileList, fileList);
         }
         notifyDataSetChanged();

@@ -38,19 +38,17 @@ public class TextEditorFragment extends DialogFragment {
     private boolean mIsBold;
     private boolean mIsItalic;
     private boolean mIsUnderLine;
-    private boolean mIsStrikeThru;
 
     private EditText mEditor;
     private ImageButton mActionBoldImageButton;
     private ImageButton mActionItalicImageButton;
     private ImageButton mActionUnderLine;
-    private ImageButton mActionStrikeThru;
 
     public TextEditorFragment() {
         // Required empty public constructor
     }
 
-    public static TextEditorFragment newInstance(String text, int textColor, int bgColor, float textSize, boolean isBold, boolean isItalic, boolean isUnderLine, boolean isStrikeThru, TextEditorListener textEditorListener) {
+    public static TextEditorFragment newInstance(String text, int textColor, int bgColor, float textSize, boolean isBold, boolean isItalic, boolean isUnderLine, TextEditorListener textEditorListener) {
         Log.d(TAG, "newInstance() called");
         Bundle args = new Bundle();
         args.putString(KEY_TEXT, text);
@@ -63,7 +61,6 @@ public class TextEditorFragment extends DialogFragment {
         fragment.mIsBold = isBold;
         fragment.mIsItalic = isItalic;
         fragment.mIsUnderLine = isUnderLine;
-        fragment.mIsStrikeThru = isStrikeThru;
         return fragment;
     }
 
@@ -99,7 +96,6 @@ public class TextEditorFragment extends DialogFragment {
         mActionBoldImageButton = (ImageButton) view.findViewById(R.id.action_bold);
         mActionItalicImageButton = (ImageButton) view.findViewById(R.id.action_italic);
         mActionUnderLine = (ImageButton) view.findViewById(R.id.action_underline);
-        mActionStrikeThru = (ImageButton) view.findViewById(R.id.action_strike_thru);
 
         mEditor.setTextColor(mTextColor);
         mEditor.setBackgroundColor(mBgColor);
@@ -111,7 +107,6 @@ public class TextEditorFragment extends DialogFragment {
         }
         setTextStyle(mEditor, mIsBold, mIsItalic);
         setTextUnderLine(mIsUnderLine);
-        setTextStrikeThru(mIsStrikeThru);
 
         mActionBoldImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,12 +138,6 @@ public class TextEditorFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 setTextUnderLine(!mActionUnderLine.isSelected());
-            }
-        });
-        mActionStrikeThru.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTextStrikeThru(!mActionStrikeThru.isSelected());
             }
         });
 
@@ -209,7 +198,6 @@ public class TextEditorFragment extends DialogFragment {
                             mActionBoldImageButton.isSelected(),
                             mActionItalicImageButton.isSelected(),
                             mActionUnderLine.isSelected(),
-                            mActionStrikeThru.isSelected(),
                             mTextSize,
                             mTextColor,
                             mBgColor
@@ -240,32 +228,14 @@ public class TextEditorFragment extends DialogFragment {
     private void setTextUnderLine(boolean isUnderLine) {
         if (isUnderLine) {
             mActionUnderLine.setSelected(true);
-            if (mActionStrikeThru.isSelected()) {
-                mEditor.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else {
-                mEditor.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            }
+            mEditor.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else {
             mActionUnderLine.setSelected(false);
             mEditor.setPaintFlags(mEditor.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         }
     }
 
-    private void setTextStrikeThru(boolean isStrikeThru) {
-        if (isStrikeThru) {
-            mActionStrikeThru.setSelected(true);
-            if (mActionUnderLine.isSelected()) {
-                mEditor.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.UNDERLINE_TEXT_FLAG);
-            } else {
-                mEditor.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-        } else {
-            mActionStrikeThru.setSelected(false);
-            mEditor.setPaintFlags(mEditor.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
-    }
-
     public interface TextEditorListener {
-        void onDone(String text, boolean isBold, boolean isItalic, boolean isUnderLine, boolean isStrikeThru, float textSize, int textColor, int bgColor);
+        void onDone(String text, boolean isBold, boolean isItalic, boolean isUnderLine, float textSize, int textColor, int bgColor);
     }
 }

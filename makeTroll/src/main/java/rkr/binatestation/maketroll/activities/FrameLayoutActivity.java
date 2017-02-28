@@ -27,7 +27,7 @@ import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.fragments.CellFragment;
-import rkr.binatestation.maketroll.fragments.ImageListFragment;
+import rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment;
 import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.models.ItemModel;
 import rkr.binatestation.maketroll.models.ViewType;
