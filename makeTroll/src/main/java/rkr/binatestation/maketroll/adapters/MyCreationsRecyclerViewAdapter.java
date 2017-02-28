@@ -61,7 +61,9 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                     }
                 });
             }
-            Collections.addAll(this.fileList, fileList);
+            if (fileList != null) {
+                Collections.addAll(this.fileList, fileList);
+            }
         }
         notifyDataSetChanged();
     }
