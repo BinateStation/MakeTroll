@@ -69,7 +69,9 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
     private void setupViewPager(ViewPager viewPager) {
         Log.d(TAG, "setupViewPager() called with: viewPager = [" + viewPager + "]");
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(mImageListFragment = ImageListFragment.newInstance(), getString(R.string.images));
+        mImageListFragment = ImageListFragment.newInstance();
+        mImageListFragment.setShowsDialog(false);
+        adapter.addFrag(mImageListFragment, getString(R.string.images));
         adapter.addFrag(MyCreationsFragment.newInstance(), getString(R.string.my_creations));
         viewPager.setAdapter(adapter);
     }

@@ -248,7 +248,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         int i = v.getId();
         if (i == R.id.AIF_action_remove_frame || i == R.id.CL_action_remove_frame) {
             if (mCellFragmentListener != null) {
-                mCellFragmentListener.remove(mPosition);
+                mCellFragmentListener.remove(mPosition, this);
             }
 
         } else if (i == R.id.AIF_action_add_image) {
@@ -415,6 +415,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     public interface CellFragmentListener {
         void invalidate();
 
-        void remove(int position);
+        void remove(int position, CellFragment cellFragment);
     }
 }

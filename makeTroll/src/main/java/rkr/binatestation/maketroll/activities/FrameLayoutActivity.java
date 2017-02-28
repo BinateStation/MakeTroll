@@ -27,7 +27,8 @@ import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.fragments.CellFragment;
-import rkr.binatestation.maketroll.fragments.dialogs.PickFrameTypeFragment;
+import rkr.binatestation.maketroll.fragments.ImageListFragment;
+import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.models.ItemModel;
 import rkr.binatestation.maketroll.models.ViewType;
 import rkr.binatestation.maketroll.utils.Utils;
@@ -35,7 +36,8 @@ import rkr.binatestation.maketroll.utils.Utils;
 import static rkr.binatestation.maketroll.utils.Utils.showAlert;
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
-public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener, CellFragment.CellFragmentListener {
+public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener,
+        CellFragment.CellFragmentListener, ImageSelectedListener {
 
     private static final String TAG = "FrameLayoutActivity";
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
@@ -90,14 +92,9 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         int i = v.getId();
         if (i == R.id.FPFT_frame_square) {
             addCell(ViewType.SQUARE);
-
-        } else if (i == R.id.FPFT_frame_rectangle) {
-            addCell(ViewType.RECTANGLE);
-
-        } else if (i == R.id.FPFT_frame_label) {
+        } else if (i == R.id.FIL_frame_label) {
             addCell(ViewType.TEXT);
         }
-
     }
 
     private void confirmBeforeSaveFrame() {
@@ -235,8 +232,8 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
     private void showFramePickerDialog() {
         Log.d(TAG, "showFragmentPickerDialog() called");
-        PickFrameTypeFragment pickFrameTypeFragment = PickFrameTypeFragment.newInstance(this);
-        pickFrameTypeFragment.show(getSupportFragmentManager(), pickFrameTypeFragment.getTag());
+        ImageListFragment imageListFragment = ImageListFragment.newInstance(this, this);
+        imageListFragment.show(getSupportFragmentManager(), imageListFragment.getTag());
     }
 
     private void putSelectedCells(ArrayList<String> endUrls) {
@@ -281,12 +278,18 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void remove(int position) {
-        CellFragment cellFragment = mCellFragments.get(position);
-        getSupportFragmentManager().beginTransaction()
-                .remove(cellFragment)
-                .commit();
-        mCellFragments.remove(position);
+    public void remove(int position, CellFragment fragment) {
+        if (mCellFragments != null && mCellFragments.size() > position) {
+            CellFragment cellFragment = mCellFragments.get(position);
+            getSupportFragmentManager().beginTransaction()
+                    .remove(cellFragment)
+                    .commit();
+            mCellFragments.remove(position);
+        } else if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
         mImageFrame.invalidate();
     }
 
@@ -305,5 +308,12 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                     }
                 }
         );
+    }
+
+    @Override
+    public void onDone(ArrayList<String> imageUrlList) {
+        if (imageUrlList != null && imageUrlList.size() > 0) {
+            putSelectedCells(imageUrlList);
+        }
     }
 }

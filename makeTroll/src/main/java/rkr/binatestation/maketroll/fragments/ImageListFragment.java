@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ImageListRecyclerViewAdapter;
 import rkr.binatestation.maketroll.interfaces.FabBehaviour;
+import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.web.ServerResponseReceiver;
 import rkr.binatestation.maketroll.web.WebServiceUtils;
 
@@ -30,14 +31,16 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_DATA;
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_STATUS;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Bottom sheet dialog fragment to show the image list
  */
-public class ImageListFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class ImageListFragment extends BottomSheetDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     private static final String TAG = "ImageListFragment";
 
     private ImageListRecyclerViewAdapter mImageListRecyclerViewAdapter;
     private FabBehaviour mFabBehaviour;
+    private View.OnClickListener mOnClickListener;
+    private ImageSelectedListener mImageSelectedListener;
 
     public ImageListFragment() {
         // Required empty public constructor
@@ -48,6 +51,17 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
         Bundle args = new Bundle();
 
         ImageListFragment fragment = new ImageListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ImageListFragment newInstance(View.OnClickListener onClickListener, ImageSelectedListener imageSelectedListener) {
+        Log.d(TAG, "newInstance() called with: onClickListener = [" + onClickListener + "]");
+        Bundle args = new Bundle();
+
+        ImageListFragment fragment = new ImageListFragment();
+        fragment.mOnClickListener = onClickListener;
+        fragment.mImageSelectedListener = imageSelectedListener;
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,29 +90,41 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        View toolbarView = view.findViewById(R.id.FIL_toolbar_layout);
+        if (toolbarView != null && !getShowsDialog()) {
+            toolbarView.setVisibility(View.GONE);
+        }
+        if (getShowsDialog()) {
+            View addTextView = view.findViewById(R.id.FIL_frame_label);
+            View doneView = view.findViewById(R.id.FIL_action_done);
+            addTextView.setOnClickListener(this);
+            doneView.setOnClickListener(this);
+        }
         SearchView searchView = (SearchView) view.findViewById(R.id.FIL_search);
         searchView.setOnQueryTextListener(this);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FIL_image_list_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
-        recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter());
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && mFabBehaviour != null) {
-                    mFabBehaviour.show();
+        recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter(getShowsDialog(), this));
+        if (!getShowsDialog()) {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE && mFabBehaviour != null) {
+                        mFabBehaviour.show();
+                    }
+                    super.onScrollStateChanged(recyclerView, newState);
                 }
-                super.onScrollStateChanged(recyclerView, newState);
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 || dy < 0 && mFabBehaviour != null) {
-                    mFabBehaviour.hide();
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy > 0 || dy < 0 && mFabBehaviour != null) {
+                        mFabBehaviour.hide();
+                    }
                 }
-            }
-        });
+            });
+        }
         getImageList("");
     }
 
@@ -155,4 +181,18 @@ public class ImageListFragment extends Fragment implements SearchView.OnQueryTex
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.FIL_action_done) {
+            if (mImageSelectedListener != null && mImageListRecyclerViewAdapter != null) {
+                mImageSelectedListener.onDone(mImageListRecyclerViewAdapter.getSelectedItemModel());
+            }
+        } else {
+            if (mOnClickListener != null) {
+                mOnClickListener.onClick(v);
+            }
+        }
+        dismiss();
+    }
 }

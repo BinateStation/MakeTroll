@@ -6,6 +6,37 @@
     android:orientation="vertical"
     tools:context="rkr.binatestation.maketroll.fragments.ImageListFragment">
 
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/FIL_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:gravity="end|center_vertical">
+
+        <TextView
+            android:id="@+id/FIL_frame_label"
+            style="@style/TextAppearance.AppCompat.Title.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_create_white_24dp"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:drawableRight="@drawable/ic_create_white_24dp"
+            android:text="@string/add_text" />
+
+        <ImageButton
+            android:id="@+id/FIL_action_done"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:contentDescription="@string/view_drag_helper"
+            android:src="@drawable/ic_done_white_24dp" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
     <android.support.v7.widget.SearchView
         android:id="@+id/FIL_search"
         android:layout_width="match_parent"
@@ -14,6 +45,7 @@
         android:focusableInTouchMode="true"
         app:iconifiedByDefault="false"
         app:queryHint="@string/search" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/FIL_image_list_recycler_view"

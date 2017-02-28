@@ -25,9 +25,16 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
  * ImageListRecyclerViewAdapter.
  */
 
-public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageListRecyclerViewAdapter.ViewHolder> {
+public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private JSONArray jsonArray;
     private Set<String> selectedImages = new HashSet<>();
+    private boolean mShowsDialog;
+    private View.OnClickListener mOnClickListener;
+
+    public ImageListRecyclerViewAdapter(boolean showsDialog, View.OnClickListener onClickListener) {
+        mShowsDialog = showsDialog;
+        mOnClickListener = onClickListener;
+    }
 
     public void setJsonArray(JSONArray jsonArray) {
         this.jsonArray = jsonArray;
@@ -48,44 +55,81 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_image_list, parent, false)
-        );
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 2) {
+            return new ViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_image_list, parent, false)
+            );
+        } else {
+            return new DevicePickerViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_pick_frame_type, parent, false)
+            );
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if (jsonArray != null) {
-            final String key = jsonArray.optString(position);
-            if (selectedImages.contains(key)) {
-                holder.maskView.setVisibility(View.VISIBLE);
-            } else {
-                holder.maskView.setVisibility(View.INVISIBLE);
-            }
-
-            String url = URL_LIVE_IMAGE + key;
-            Context context = holder.appCompatImageView.getContext();
-            Glide.with(context)
-                    .load(url)
-                    .centerCrop()
-                    .placeholder(R.drawable.gallery)
-                    .crossFade()
-                    .into(holder.appCompatImageView);
+    public int getItemViewType(int position) {
+        if (mShowsDialog && position == 0) {
+            return 1;
+        } else {
+            return 2;
         }
+    }
 
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == 2 && holder instanceof ViewHolder) {
+            ViewHolder viewHolderImageList = (ViewHolder) holder;
+            String item = getItem(position);
+            if (item != null) {
+                if (selectedImages.contains(item)) {
+                    viewHolderImageList.maskView.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolderImageList.maskView.setVisibility(View.INVISIBLE);
+                }
+
+                String url = URL_LIVE_IMAGE + item;
+                Context context = viewHolderImageList.appCompatImageView.getContext();
+                Glide.with(context)
+                        .load(url)
+                        .centerCrop()
+                        .placeholder(R.drawable.gallery)
+                        .crossFade()
+                        .into(viewHolderImageList.appCompatImageView);
+            }
+        }
+    }
+
+    private String getItem(int position) {
+        if (jsonArray != null) {
+            if (mShowsDialog) {
+                return jsonArray.optString(position - 1);
+            } else {
+                return jsonArray.optString(position);
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
     public int getItemCount() {
         if (jsonArray != null) {
-            return jsonArray.length();
+            if (mShowsDialog) {
+                return jsonArray.length() + 1;
+            } else {
+                return jsonArray.length();
+            }
         } else {
-            return 0;
+            if (mShowsDialog) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private AppCompatImageView appCompatImageView;
         private View maskView;
 
@@ -98,7 +142,7 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
 
         @Override
         public void onClick(View v) {
-            final String key = jsonArray.optString(getAdapterPosition());
+            final String key = getItem(getAdapterPosition());
             if (selectedImages.contains(key)) {
                 selectedImages.remove(key);
                 maskView.setVisibility(View.GONE);
@@ -108,6 +152,23 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<ImageList
                 selectedImages.add(key);
                 maskView.setLayoutParams(new CardView.LayoutParams(width, height));
                 maskView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private class DevicePickerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private View pickFromDeviceView;
+
+        DevicePickerViewHolder(View itemView) {
+            super(itemView);
+            pickFromDeviceView = itemView.findViewById(R.id.FPFT_frame_square);
+            pickFromDeviceView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnClickListener != null) {
+                mOnClickListener.onClick(v);
             }
         }
     }
