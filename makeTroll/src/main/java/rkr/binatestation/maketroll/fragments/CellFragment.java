@@ -125,7 +125,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             actionAddImage = (ImageView) view.findViewById(R.id.AIF_action_add_image);
             actionRemoveFrame = (ImageButton) view.findViewById(R.id.AIF_action_remove_frame);
             maskView = view.findViewById(R.id.AIF_mask_view);
-            ImageButton scaleHelper = (ImageButton) view.findViewById(R.id.AIF_action_scale);
+            ImageButton actionResizeImageButton = (ImageButton) view.findViewById(R.id.AIF_action_resize);
             ImageButton dragHelper = (ImageButton) view.findViewById(R.id.AIF_drag_button);
             dragHelper.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -134,6 +134,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                     return true;
                 }
             });
+            actionResizeImageButton.setOnTouchListener(this);
 
             actionRemoveFrame.setOnClickListener(this);
             actionAddImage.setOnClickListener(this);
@@ -161,12 +162,12 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                     maskView.setVisibility(View.GONE);
                 }
             });
-            scaleHelper.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    actionScale(mMaxHeight, mMaxWidth, actionAddImage.getMeasuredHeight(), actionAddImage.getMeasuredWidth());
-                }
-            });
+//            scaleHelper.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    actionScale(mMaxHeight, mMaxWidth, actionAddImage.getMeasuredHeight(), actionAddImage.getMeasuredWidth());
+//                }
+//            });
             setView();
         } else {
             mLabelText = getString(R.string.title_activity_home);
@@ -193,31 +194,73 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        final int X = (int) event.getRawX();
-        final int Y = (int) event.getRawY();
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case ACTION_DOWN:
-                FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) v.getLayoutParams();
-                _xDelta = X - lParams.leftMargin;
-                _yDelta = Y - lParams.topMargin;
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
-                layoutParams.leftMargin = X - _xDelta;
-                layoutParams.topMargin = Y - _yDelta;
-                layoutParams.rightMargin = 0;
-                layoutParams.bottomMargin = 0;
-                v.setLayoutParams(layoutParams);
-                break;
-        }
-        if (mCellFragmentListener != null) {
-            mCellFragmentListener.invalidate();
+        if (v.getId() == R.id.AIF_action_resize) {
+            final int X = (int) event.getRawX();
+            final int Y = (int) event.getRawY();
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                case ACTION_DOWN:
+                    FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
+                    _xDelta = X - lParams.width;
+                    _yDelta = Y - lParams.height;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
+                    int height = Y - _yDelta;
+                    if (height < 150) {
+                        height = 150;
+                    }
+                    if (height > mMaxHeight) {
+                        height = mMaxHeight;
+                    }
+                    int width = X + _xDelta;
+                    if (width < 150) {
+                        width = 150;
+                    }
+                    if (width > mMaxWidth) {
+                        width = mMaxWidth;
+                    }
+                    layoutParams.width = width;
+                    layoutParams.height = height;
+
+                    itemView.setLayoutParams(layoutParams);
+                    break;
+            }
+            if (mCellFragmentListener != null) {
+                mCellFragmentListener.invalidate();
+            }
+        } else {
+            final int X = (int) event.getRawX();
+            final int Y = (int) event.getRawY();
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                case ACTION_DOWN:
+                    FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) v.getLayoutParams();
+                    _xDelta = X - lParams.leftMargin;
+                    _yDelta = Y - lParams.topMargin;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
+                    layoutParams.leftMargin = X - _xDelta;
+                    layoutParams.topMargin = Y - _yDelta;
+                    layoutParams.rightMargin = 0;
+                    layoutParams.bottomMargin = 0;
+                    v.setLayoutParams(layoutParams);
+                    break;
+            }
+            if (mCellFragmentListener != null) {
+                mCellFragmentListener.invalidate();
+            }
         }
         return false;
     }

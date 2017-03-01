@@ -34,7 +34,7 @@ import rkr.binatestation.maketroll.utils.Utils;
  */
 
 public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreationsRecyclerViewAdapter.ViewHolder> {
-    private List<File> fileList = new ArrayList<>();
+    private List<File> mFileList = new ArrayList<>();
     private FragmentManager mChildFragmentManager;
     private FbShareListener mFbShareListener;
 
@@ -52,17 +52,17 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                     return pathname.isFile();
                 }
             });
-            this.fileList.clear();
+            this.mFileList.clear();
             if (fileList != null && fileList.length > 1) {
                 Arrays.sort(fileList, new Comparator<File>() {
                     @Override
                     public int compare(File object1, File object2) {
-                        return (int) ((object1.lastModified() > object2.lastModified()) ? object1.lastModified() : object2.lastModified());
+                        return (object1.lastModified() > object2.lastModified()) ? -1 : 1;
                     }
                 });
             }
             if (fileList != null) {
-                Collections.addAll(this.fileList, fileList);
+                Collections.addAll(this.mFileList, fileList);
             }
         }
         notifyDataSetChanged();
@@ -81,7 +81,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        File file = fileList.get(position);
+        File file = mFileList.get(position);
         if (file != null) {
             Uri uri = Uri.fromFile(file);
             holder.appCompatImageView.setImageURI(uri);
@@ -96,7 +96,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
 
     @Override
     public int getItemCount() {
-        return fileList == null ? 0 : fileList.size();
+        return mFileList == null ? 0 : mFileList.size();
     }
 
     private boolean isPackageInstalled(String packageName, Context context) {
@@ -142,7 +142,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
 
         private void loadPreviewDialog() {
-            PreviewFragment previewFragment = PreviewFragment.newInstance(fileList.get(getAdapterPosition()), new PreviewFragment.PreviewListener() {
+            PreviewFragment previewFragment = PreviewFragment.newInstance(mFileList.get(getAdapterPosition()), new PreviewFragment.PreviewListener() {
                 @Override
                 public void shareToWhatsApp() {
                     ViewHolder.this.shareToWhatsApp();
@@ -172,10 +172,10 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (DialogInterface.BUTTON_POSITIVE == which) {
-                                    File file = fileList.get(getAdapterPosition());
+                                    File file = mFileList.get(getAdapterPosition());
                                     if (file != null && file.exists() && file.isFile()) {
                                         if (file.delete()) {
-                                            fileList.remove(getAdapterPosition());
+                                            mFileList.remove(getAdapterPosition());
                                             notifyItemRemoved(getAdapterPosition());
                                         }
                                     }
@@ -190,7 +190,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         private void shareToWhatsApp() {
             Context context = whatsAppShareAppCompatImageButton.getContext();
             if (isPackageInstalled("com.whatsapp", context)) {
-                File file = fileList.get(getAdapterPosition());
+                File file = mFileList.get(getAdapterPosition());
                 if (file != null) {
                     Uri uri = Uri.fromFile(file);
                     Intent sendIntent = new Intent();
@@ -205,7 +205,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
 
         private void shareFb() {
             if (mFbShareListener != null) {
-                File file = fileList.get(getAdapterPosition());
+                File file = mFileList.get(getAdapterPosition());
                 if (file != null) {
                     Uri uri = Uri.fromFile(file);
                     mFbShareListener.shareToFacebook(uri);
