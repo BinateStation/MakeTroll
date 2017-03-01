@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -29,7 +28,6 @@ import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import rkr.binatestation.maketroll.R;
-import rkr.binatestation.maketroll.fragments.dialogs.ScaleFragment;
 import rkr.binatestation.maketroll.fragments.dialogs.TextEditorFragment;
 import rkr.binatestation.maketroll.models.ItemModel;
 import rkr.binatestation.maketroll.models.ViewType;
@@ -45,25 +43,23 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
 public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, IPickResult {
 
     private static final String TAG = "CellFragment";
-    float lastY = Float.MIN_VALUE;
-    float lastX = Float.MIN_VALUE;
-    private int _xDelta;
-    private int _yDelta;
+    private float mLastY = Float.MIN_VALUE;
+    private float mLastX = Float.MIN_VALUE;
+    private int mXDelta;
+    private int mYDelta;
     private CellFragmentListener mCellFragmentListener;
     private FrameLayout.LayoutParams mLayoutParams;
     private ItemModel mItemModel;
     private int mMaxWidth = 400;
     private int mMaxHeight = 600;
-    private boolean hideUnwantedViews = false;
+    private boolean mHideUnwantedViews = false;
     private int mPosition;
-    private ImageView actionAddImage;
-    private ImageButton actionRemoveFrame;
+    private ImageView mActionAddImage;
+    private ImageButton mActionRemoveFrame;
     private PhotoViewAttacher mAttache;
-    private View maskView;
-    private View itemView;
-    private ImageButton editLabelImageButton;
-    private ImageButton removeFrameImageButton;
-    private ImageButton actionBringToFront;
+    private View mMaskView;
+    private View mItemView;
+    private View mLabelToolbarView;
     private TextView mLabelTextView;
     private String mLabelText = "";
     private int mTextColor = Color.WHITE;
@@ -114,7 +110,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        this.itemView = view;
+        this.mItemView = view;
         super.onViewCreated(view, savedInstanceState);
         if (mLayoutParams != null) {
             view.setLayoutParams(mLayoutParams);
@@ -123,26 +119,26 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         view.setOnClickListener(this);
 
         if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT) {
-            actionAddImage = (ImageView) view.findViewById(R.id.AIF_action_add_image);
-            actionRemoveFrame = (ImageButton) view.findViewById(R.id.AIF_action_remove_frame);
-            maskView = view.findViewById(R.id.AIF_mask_view);
+            mActionAddImage = (ImageView) view.findViewById(R.id.AIF_action_add_image);
+            mActionRemoveFrame = (ImageButton) view.findViewById(R.id.AIF_action_remove_frame);
+            mMaskView = view.findViewById(R.id.AIF_mask_view);
             ImageButton actionResizeImageButton = (ImageButton) view.findViewById(R.id.AIF_action_resize);
             ImageButton dragHelper = (ImageButton) view.findViewById(R.id.AIF_drag_button);
             dragHelper.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    CellFragment.this.onTouch(itemView, event);
+                    CellFragment.this.onTouch(mItemView, event);
                     return true;
                 }
             });
             actionResizeImageButton.setOnTouchListener(this);
 
-            actionRemoveFrame.setOnClickListener(this);
-            actionAddImage.setOnClickListener(this);
+            mActionRemoveFrame.setOnClickListener(this);
+            mActionAddImage.setOnClickListener(this);
             ImageButton actionBringToFrontImageButton = (ImageButton) view.findViewById(R.id.AIF_action_bring_to_front);
             actionBringToFrontImageButton.setOnClickListener(this);
 
-            mAttache = new PhotoViewAttacher(actionAddImage);
+            mAttache = new PhotoViewAttacher(mActionAddImage);
             mAttache.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
@@ -153,41 +149,36 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             mAttache.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    maskView.setVisibility(View.VISIBLE);
+                    mMaskView.setVisibility(View.VISIBLE);
                     return true;
                 }
             });
-            maskView.setOnClickListener(new View.OnClickListener() {
+            mMaskView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    maskView.setVisibility(View.GONE);
+                    mMaskView.setVisibility(View.GONE);
                 }
             });
-//            scaleHelper.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    actionScale(mMaxHeight, mMaxWidth, actionAddImage.getMeasuredHeight(), actionAddImage.getMeasuredWidth());
-//                }
-//            });
             setView();
         } else {
             mLabelText = getString(R.string.title_activity_home);
             mBgColor = ContextCompat.getColor(getContext(), R.color.colorMask);
             mLabelTextView = (TextView) view.findViewById(R.id.CL_label);
+            mLabelToolbarView = view.findViewById(R.id.CL_toolbar_layout);
             mLabelTextView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    CellFragment.this.onTouch(itemView, event);
+                    CellFragment.this.onTouch(mItemView, event);
                     return true;
                 }
             });
-            editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
+            ImageButton editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
             editLabelImageButton.setOnClickListener(this);
 
-            removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
+            ImageButton removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
             removeFrameImageButton.setOnClickListener(this);
 
-            actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
+            ImageButton actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
             actionBringToFront.setOnClickListener(this);
 
         }
@@ -197,31 +188,31 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     public boolean onTouch(View v, MotionEvent event) {
         if (v.getId() == R.id.AIF_action_resize) {
             if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
-                if (lastY != Float.MIN_VALUE && lastX != Float.MAX_VALUE) {
-                    final float height = event.getRawY() - lastY;
-                    final float width = event.getRawX() - lastX;
+                if (mLastY != Float.MIN_VALUE && mLastX != Float.MAX_VALUE) {
+                    final float height = event.getRawY() - mLastY;
+                    final float width = event.getRawX() - mLastX;
 
-                    itemView.post(new Runnable() {
+                    mItemView.post(new Runnable() {
                         @Override
                         public void run() {
-                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mItemView.getLayoutParams();
                             layoutParams.height += height;
                             layoutParams.width += width;
                             int finalHeight = layoutParams.height;
                             int finalWidth = layoutParams.width;
                             if (finalHeight > 150 && finalWidth > 150 && finalHeight <= mMaxHeight && finalWidth <= mMaxWidth) {
-                                itemView.setLayoutParams(layoutParams);
+                                mItemView.setLayoutParams(layoutParams);
                             }
                         }
                     });
                 }
-                lastY = event.getRawY();
-                lastX = event.getRawX();
+                mLastY = event.getRawY();
+                mLastX = event.getRawX();
             }
 
             if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-                lastY = Float.MIN_VALUE;
-                lastX = Float.MIN_VALUE;
+                mLastY = Float.MIN_VALUE;
+                mLastX = Float.MIN_VALUE;
             }
 
             return true;
@@ -231,8 +222,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case ACTION_DOWN:
                     FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) v.getLayoutParams();
-                    _xDelta = X - lParams.leftMargin;
-                    _yDelta = Y - lParams.topMargin;
+                    mXDelta = X - lParams.leftMargin;
+                    mYDelta = Y - lParams.topMargin;
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
@@ -242,8 +233,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                     break;
                 case MotionEvent.ACTION_MOVE:
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
-                    layoutParams.leftMargin = X - _xDelta;
-                    layoutParams.topMargin = Y - _yDelta;
+                    layoutParams.leftMargin = X - mXDelta;
+                    layoutParams.topMargin = Y - mYDelta;
                     layoutParams.rightMargin = 0;
                     layoutParams.bottomMargin = 0;
                     v.setLayoutParams(layoutParams);
@@ -271,8 +262,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     public void setHideUnwantedViews(boolean hideUnwantedViews) {
-        Log.d(TAG, "setHideUnwantedViews() called with: hideUnwantedViews = [" + hideUnwantedViews + "]");
-        this.hideUnwantedViews = hideUnwantedViews;
+        Log.d(TAG, "setHideUnwantedViews() called with: mHideUnwantedViews = [" + hideUnwantedViews + "]");
+        this.mHideUnwantedViews = hideUnwantedViews;
         setView();
     }
 
@@ -335,55 +326,15 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         }
     }
 
-    private void actionScale(int height, int width, int measuredHeight, int measuredWidth) {
-        Log.d(TAG, "actionScale() called with: height = [" + height + "], width = [" + width + "], measuredHeight = [" + measuredHeight + "], measuredWidth = [" + measuredWidth + "]");
-        ScaleFragment scaleFragment = ScaleFragment.newInstance(height, width, measuredHeight, measuredWidth, new ScaleFragment.ScaleListener() {
-            @Override
-            public void onChangeHeight(int height) {
-                if (itemView != null) {
-                    int width = itemView.getMeasuredWidth();
-                    ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-                    layoutParams.width = width;
-                    layoutParams.height = height;
-                    itemView.setLayoutParams(layoutParams);
-                    itemView.requestLayout();
-                }
-            }
-
-            @Override
-            public void onChangeWidth(int width) {
-                int height = itemView.getMeasuredHeight();
-                ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-                layoutParams.width = width;
-                layoutParams.height = height;
-                itemView.setLayoutParams(layoutParams);
-                itemView.requestLayout();
-            }
-
-            @Override
-            public void onDone(int maxWidth) {
-                int width = itemView.getMeasuredWidth();
-                if (width < maxWidth - 100) {
-                    mItemModel.setViewType(ViewType.SQUARE);
-                } else {
-                    mItemModel.setViewType(ViewType.RECTANGLE);
-                }
-                setView();
-            }
-        });
-        scaleFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme_Dialog_Scale);
-        scaleFragment.show(getChildFragmentManager(), scaleFragment.getTag());
-    }
-
     private void setView() {
         Log.d(TAG, "setView() called");
-        if (mItemModel != null && !hideUnwantedViews) {
+        if (mItemModel != null && !mHideUnwantedViews) {
             Bitmap bitmap = mItemModel.getBitmap();
             if (bitmap != null) {
-                actionAddImage.setImageBitmap(bitmap);
+                mActionAddImage.setImageBitmap(bitmap);
             } else if (mItemModel.getEndUrl() != null) {
                 String url = URL_LIVE_IMAGE + mItemModel.getEndUrl();
-                Context context = actionAddImage.getContext();
+                Context context = mActionAddImage.getContext();
                 Glide.with(context)
                         .load(url)
                         .asBitmap()
@@ -392,27 +343,25 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                actionAddImage.setImageBitmap(resource);
+                                mActionAddImage.setImageBitmap(resource);
                                 mItemModel.setBitmap(resource);
                                 mAttache.update();
                             }
                         })
                 ;
             } else {
-                actionAddImage.setImageDrawable(ContextCompat.getDrawable(
-                        actionAddImage.getContext(),
+                mActionAddImage.setImageDrawable(ContextCompat.getDrawable(
+                        mActionAddImage.getContext(),
                         R.drawable.ic_add_a_photo_black_24dp
                 ));
             }
             mAttache.update();
         }
-        if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT && hideUnwantedViews) {
-            actionRemoveFrame.setVisibility(View.GONE);
-            maskView.setVisibility(View.GONE);
-        } else if (mItemModel != null && mItemModel.getViewType() == ViewType.TEXT && hideUnwantedViews) {
-            editLabelImageButton.setVisibility(View.INVISIBLE);
-            removeFrameImageButton.setVisibility(View.INVISIBLE);
-            actionBringToFront.setVisibility(View.INVISIBLE);
+        if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT && mHideUnwantedViews) {
+            mActionRemoveFrame.setVisibility(View.GONE);
+            mMaskView.setVisibility(View.GONE);
+        } else if (mItemModel != null && mItemModel.getViewType() == ViewType.TEXT && mHideUnwantedViews) {
+            mLabelToolbarView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -422,8 +371,8 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     }
 
     private void bringToFrontCell() {
-        if (itemView != null) {
-            itemView.bringToFront();
+        if (mItemView != null) {
+            mItemView.bringToFront();
         }
     }
 
