@@ -45,7 +45,8 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
 public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, IPickResult {
 
     private static final String TAG = "CellFragment";
-
+    float lastY = Float.MIN_VALUE;
+    float lastX = Float.MIN_VALUE;
     private int _xDelta;
     private int _yDelta;
     private CellFragmentListener mCellFragmentListener;
@@ -195,45 +196,35 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (v.getId() == R.id.AIF_action_resize) {
-            final int X = (int) event.getRawX();
-            final int Y = (int) event.getRawY();
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case ACTION_DOWN:
-                    FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
-                    _xDelta = X - lParams.width;
-                    _yDelta = Y - lParams.height;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
-                    int height = Y - _yDelta;
-                    if (height < 150) {
-                        height = 150;
-                    }
-                    if (height > mMaxHeight) {
-                        height = mMaxHeight;
-                    }
-                    int width = X + _xDelta;
-                    if (width < 150) {
-                        width = 150;
-                    }
-                    if (width > mMaxWidth) {
-                        width = mMaxWidth;
-                    }
-                    layoutParams.width = width;
-                    layoutParams.height = height;
+            if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
+                if (lastY != Float.MIN_VALUE && lastX != Float.MAX_VALUE) {
+                    final float height = event.getRawY() - lastY;
+                    final float width = event.getRawX() - lastX;
 
-                    itemView.setLayoutParams(layoutParams);
-                    break;
+                    itemView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) itemView.getLayoutParams();
+                            layoutParams.height += height;
+                            layoutParams.width += width;
+                            int finalHeight = layoutParams.height;
+                            int finalWidth = layoutParams.width;
+                            if (finalHeight > 150 && finalWidth > 150 && finalHeight <= mMaxHeight && finalWidth <= mMaxWidth) {
+                                itemView.setLayoutParams(layoutParams);
+                            }
+                        }
+                    });
+                }
+                lastY = event.getRawY();
+                lastX = event.getRawX();
             }
-            if (mCellFragmentListener != null) {
-                mCellFragmentListener.invalidate();
+
+            if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                lastY = Float.MIN_VALUE;
+                lastX = Float.MIN_VALUE;
             }
+
+            return true;
         } else {
             final int X = (int) event.getRawX();
             final int Y = (int) event.getRawY();
