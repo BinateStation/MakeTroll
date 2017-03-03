@@ -295,19 +295,23 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
-        showAlert(
-                this,
-                getString(android.R.string.dialog_alert_title),
-                getString(R.string.on_back_press_alert_message),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            onSaveCompleted();
+        try {
+            showAlert(
+                    this,
+                    getString(android.R.string.dialog_alert_title),
+                    getString(R.string.on_back_press_alert_message),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == DialogInterface.BUTTON_POSITIVE) {
+                                onSaveCompleted();
+                            }
                         }
                     }
-                }
-        );
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

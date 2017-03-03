@@ -15,8 +15,12 @@
         android:theme="@style/AppTheme"
         tools:replace="label">
         <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"
@@ -53,17 +57,11 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.piclo.in/trollmaker/” -->
+
                 <data
                     android:host="www.piclo.in"
                     android:pathPrefix="/trollmaker"
                     android:scheme="http" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data
-                    android:host="trollmaker"
-                    android:scheme="rkr.binatestation" />
-
             </intent-filter>
         </activity>
         <activity
