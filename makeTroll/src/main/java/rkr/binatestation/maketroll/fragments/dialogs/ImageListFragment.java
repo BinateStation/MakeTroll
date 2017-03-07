@@ -120,7 +120,7 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
                     if (dy > 0 || dy < 0 && mFabBehaviour != null) {
-                        mFabBehaviour.hide();
+                        mFabBehaviour.show();
                     }
                 }
             });
