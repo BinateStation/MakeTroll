@@ -50,8 +50,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private CellFragmentListener mCellFragmentListener;
     private FrameLayout.LayoutParams mLayoutParams;
     private ItemModel mItemModel;
-    private int mMaxWidth = 400;
-    private int mMaxHeight = 600;
     private boolean mHideUnwantedViews = false;
     private int mPosition;
     private ImageView mActionAddImage;
@@ -73,28 +71,24 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         // Required empty public constructor
     }
 
-    public static CellFragment newInstance(FrameLayout.LayoutParams layoutParams, int width, int height, ViewType viewType, int position) {
+    public static CellFragment newInstance(FrameLayout.LayoutParams layoutParams, ViewType viewType, int position) {
 
         Bundle args = new Bundle();
         CellFragment fragment = new CellFragment();
         fragment.setArguments(args);
         fragment.mLayoutParams = layoutParams;
         fragment.mItemModel = new ItemModel(viewType);
-        fragment.mMaxWidth = width;
-        fragment.mMaxHeight = height;
         fragment.mPosition = position;
         return fragment;
     }
 
-    public static CellFragment newInstance(FrameLayout.LayoutParams layoutParams, int width, int height, ItemModel itemModel, int position) {
+    public static CellFragment newInstance(FrameLayout.LayoutParams layoutParams, ItemModel itemModel, int position) {
 
         Bundle args = new Bundle();
         CellFragment fragment = new CellFragment();
         fragment.setArguments(args);
         fragment.mLayoutParams = layoutParams;
         fragment.mItemModel = itemModel;
-        fragment.mMaxWidth = width;
-        fragment.mMaxHeight = height;
         fragment.mPosition = position;
         return fragment;
     }
@@ -200,7 +194,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                             layoutParams.width += width;
                             int finalHeight = layoutParams.height;
                             int finalWidth = layoutParams.width;
-                            if (finalHeight > 150 && finalWidth > 150 && finalHeight <= mMaxHeight && finalWidth <= mMaxWidth) {
+                            if (finalHeight > 150 && finalWidth > 150) {
                                 mItemView.setLayoutParams(layoutParams);
                             }
                         }

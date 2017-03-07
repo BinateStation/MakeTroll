@@ -223,7 +223,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
             layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
         }
         layoutParams.setMargins(50, 50, 0, 0);
-        CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, viewType, mCellFragments.size());
+        CellFragment cellFragment = CellFragment.newInstance(layoutParams, viewType, mCellFragments.size());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
                 .commit();
@@ -260,7 +260,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                         layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
                     }
                     layoutParams.setMargins(50, 50, 0, 0);
-                    CellFragment cellFragment = CellFragment.newInstance(layoutParams, width, height, itemModel, mCellFragments.size());
+                    CellFragment cellFragment = CellFragment.newInstance(layoutParams, itemModel, mCellFragments.size());
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
                             .commit();
