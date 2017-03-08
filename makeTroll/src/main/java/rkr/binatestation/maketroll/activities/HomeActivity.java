@@ -19,14 +19,12 @@ import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ViewPagerAdapter;
 import rkr.binatestation.maketroll.fragments.MyCreationsFragment;
 import rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment;
-import rkr.binatestation.maketroll.interfaces.FabBehaviour;
 
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
-public class HomeActivity extends AppCompatActivity implements FabBehaviour {
+public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
     private ImageListFragment mImageListFragment;
-    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +33,9 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
         Toolbar toolbar = (Toolbar) findViewById(R.id.AH_toolbar);
         setSupportActionBar(toolbar);
 
-        mFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
-        mFab.setColorFilter(Color.WHITE);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton createFrameFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
+        createFrameFab.setColorFilter(Color.WHITE);
+        createFrameFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateToMakeTrollFrame();
@@ -88,19 +86,5 @@ public class HomeActivity extends AppCompatActivity implements FabBehaviour {
         }
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
-
-    @Override
-    public void show() {
-        if (mFab != null && !mFab.isShown()) {
-            mFab.show();
-        }
-    }
-
-    @Override
-    public void hide() {
-        if (mFab != null && mFab.isShown()) {
-            mFab.hide();
-        }
     }
 }

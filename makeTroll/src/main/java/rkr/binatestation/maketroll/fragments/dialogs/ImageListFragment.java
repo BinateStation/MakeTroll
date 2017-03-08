@@ -1,7 +1,6 @@
 package rkr.binatestation.maketroll.fragments.dialogs;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ImageListRecyclerViewAdapter;
-import rkr.binatestation.maketroll.interfaces.FabBehaviour;
 import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.web.ServerResponseReceiver;
 import rkr.binatestation.maketroll.web.WebServiceUtils;
@@ -38,7 +36,6 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
     private static final String TAG = "ImageListFragment";
 
     private ImageListRecyclerViewAdapter mImageListRecyclerViewAdapter;
-    private FabBehaviour mFabBehaviour;
     private View.OnClickListener mOnClickListener;
     private ImageSelectedListener mImageSelectedListener;
 
@@ -67,20 +64,6 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof FabBehaviour) {
-            mFabBehaviour = (FabBehaviour) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        mFabBehaviour = null;
-        super.onDetach();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_image_list, container, false);
@@ -106,25 +89,6 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FIL_image_list_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter(getShowsDialog(), this));
-        if (!getShowsDialog()) {
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE && mFabBehaviour != null) {
-                        mFabBehaviour.show();
-                    }
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (dy > 0 || dy < 0 && mFabBehaviour != null) {
-                        mFabBehaviour.show();
-                    }
-                }
-            });
-        }
         getImageList("");
     }
 
