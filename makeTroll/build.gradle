@@ -27,8 +27,6 @@ android {
         }
     }
     return true
-    productFlavors {
-    }
 }
 allprojects {
     repositories {
