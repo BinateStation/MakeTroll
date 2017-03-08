@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +45,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     private FrameLayout mImageFrame;
     private View mWaterMarkView;
     private List<CellFragment> mCellFragments = new ArrayList<>();
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,20 +100,25 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void confirmBeforeSaveFrame() {
-        showAlert(
-                this,
-                getString(android.R.string.dialog_alert_title),
-                getString(R.string.save_confirmation_msg),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (DialogInterface.BUTTON_POSITIVE == which) {
-                            hideUnwantedViews();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showAlert(
+                        getContext(),
+                        getString(android.R.string.dialog_alert_title),
+                        getString(R.string.save_confirmation_msg),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (DialogInterface.BUTTON_POSITIVE == which) {
+                                    hideUnwantedViews();
+                                }
+                                dialog.dismiss();
+                            }
                         }
-                        dialog.dismiss();
-                    }
-                }
-        );
+                );
+            }
+        });
     }
 
     private void hideUnwantedViews() {
@@ -127,16 +134,25 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         checkPermissionBeforeSaveImage();
     }
 
-    private void showAlertForPermission() {
-        showAlert(this, getString(android.R.string.dialog_alert_title), getString(R.string.external_directory_permission_alert_msg), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    ActivityCompat.requestPermissions(FrameLayoutActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+    private FrameLayoutActivity getContext() {
+        return FrameLayoutActivity.this;
+    }
 
-                }
+    private void showAlertForPermission() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showAlert(getContext(), getString(android.R.string.dialog_alert_title), getString(R.string.external_directory_permission_alert_msg), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            ActivityCompat.requestPermissions(FrameLayoutActivity.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                        }
+                    }
+                });
             }
         });
     }
@@ -174,7 +190,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
-            if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+            if (grantResults.length > 0 && PackageManager.PERMISSION_GRANTED == grantResults[0]) {
                 saveFrame(mImageFrame);
             } else {
                 showAlertForPermission();
@@ -295,23 +311,24 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
-        try {
-            showAlert(
-                    this,
-                    getString(android.R.string.dialog_alert_title),
-                    getString(R.string.on_back_press_alert_message),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == DialogInterface.BUTTON_POSITIVE) {
-                                onSaveCompleted();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showAlert(
+                        getContext(),
+                        getString(android.R.string.dialog_alert_title),
+                        getString(R.string.on_back_press_alert_message),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    onSaveCompleted();
+                                }
                             }
                         }
-                    }
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                );
+            }
+        });
     }
 
     @Override
