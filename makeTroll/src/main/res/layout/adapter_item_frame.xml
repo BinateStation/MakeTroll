@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/AIF_child_photo_frame"
     android:layout_width="match_parent"
     android:layout_height="150dp"
@@ -35,9 +34,7 @@
         android:id="@+id/AIF_mask_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMask"
-        android:visibility="invisible"
-        tools:visibility="visible">
+        android:background="@color/colorMask">
 
         <ImageButton
             android:id="@+id/AIF_drag_button"

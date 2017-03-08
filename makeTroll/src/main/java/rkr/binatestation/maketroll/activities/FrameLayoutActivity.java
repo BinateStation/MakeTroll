@@ -238,7 +238,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         } else {
             layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
         }
-        layoutParams.setMargins(50, 50, 0, 0);
+        setMargin(layoutParams, width, height);
         CellFragment cellFragment = CellFragment.newInstance(layoutParams, viewType, mCellFragments.size());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
@@ -275,7 +275,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
                     } else {
                         layoutParams = new FrameLayout.LayoutParams(width / 2, height / 3);
                     }
-                    layoutParams.setMargins(50, 50, 0, 0);
+                    setMargin(layoutParams, width, height);
                     CellFragment cellFragment = CellFragment.newInstance(layoutParams, itemModel, mCellFragments.size());
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.activity_frame_layout_image_frame, cellFragment, cellFragment.getTag())
@@ -287,6 +287,19 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void setMargin(FrameLayout.LayoutParams layoutParams, int width, int height) {
+        int margin = 50 * mCellFragments.size();
+        int maxMargin = width / 2;
+        int maxHeight = height / 3;
+        while (margin > maxMargin || margin > maxHeight) {
+            if (margin > width) {
+                margin = margin - width;
+            } else {
+                margin = margin - height;
+            }
+        }
+        layoutParams.setMargins(margin, margin, 0, 0);
+    }
 
     @Override
     public void invalidate() {
