@@ -35,7 +35,6 @@ import rkr.binatestation.maketroll.models.ViewType;
 import rkr.binatestation.maketroll.utils.Utils;
 
 import static rkr.binatestation.maketroll.utils.Utils.showAlert;
-import static rkr.binatestation.maketroll.utils.Utils.showAlertOk;
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
 public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener,
@@ -203,13 +202,11 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                showAlertOk(FrameLayoutActivity.this, getString(android.R.string.dialog_alert_title),
-                        getString(R.string.permission_denied_msg), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
+                showAlert(
+                        FrameLayoutActivity.this,
+                        getString(android.R.string.dialog_alert_title),
+                        getString(R.string.permission_denied_msg)
+                );
             }
         });
     }

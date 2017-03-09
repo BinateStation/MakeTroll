@@ -68,14 +68,6 @@ public class Utils {
         builder.show();
     }
 
-    public static void showAlertOk(Context context, String title, String message, DialogInterface.OnClickListener onClickListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(android.R.string.ok, onClickListener);
-        builder.show();
-    }
-
     public static void setTextStyle(TextView textView, boolean isBold, boolean isItalic) {
         if (isBold && isItalic) {
             textView.setTypeface(Typeface.DEFAULT, Typeface.BOLD_ITALIC);
