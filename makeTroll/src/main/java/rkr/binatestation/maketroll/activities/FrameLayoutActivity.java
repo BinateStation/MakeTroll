@@ -35,6 +35,7 @@ import rkr.binatestation.maketroll.models.ViewType;
 import rkr.binatestation.maketroll.utils.Utils;
 
 import static rkr.binatestation.maketroll.utils.Utils.showAlert;
+import static rkr.binatestation.maketroll.utils.Utils.showAlertOk;
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
 public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener,
@@ -193,9 +194,24 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
             if (grantResults.length > 0 && PackageManager.PERMISSION_GRANTED == grantResults[0]) {
                 saveFrame(mImageFrame);
             } else {
-                showAlertForPermission();
+                showAlertForDeny();
             }
         }
+    }
+
+    private void showAlertForDeny() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showAlertOk(FrameLayoutActivity.this, getString(android.R.string.dialog_alert_title),
+                        getString(R.string.permission_denied_msg), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+            }
+        });
     }
 
     private void saveFrame(final View view) {
@@ -289,13 +305,13 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
     private void setMargin(FrameLayout.LayoutParams layoutParams, int width, int height) {
         int margin = 50 * mCellFragments.size();
-        int maxMargin = width / 2;
-        int maxHeight = height / 3;
-        while (margin > maxMargin || margin > maxHeight) {
-            if (margin > width) {
-                margin = margin - width;
+        int maxWidthMargin = width / 2;
+        int maxHeightMargin = height / 3;
+        while (margin > maxWidthMargin || margin > maxHeightMargin) {
+            if (margin > maxWidthMargin) {
+                margin = margin - maxWidthMargin;
             } else {
-                margin = margin - height;
+                margin = margin - maxHeightMargin;
             }
             if (margin < 0) {
                 margin = 0;

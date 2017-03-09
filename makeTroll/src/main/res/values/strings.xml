@@ -27,4 +27,5 @@
     <string name="save_confirmation_msg">Are you sure you want to save this frame ?</string>
     <string name="pick_from_gallery">Pick from Gallery</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://www.piclo.in\",\n  }\n}]</string>
+    <string name="permission_denied_msg">We are unable to save the frame because you denied storage permission, please allow permission and try again.</string>
 </resources>
