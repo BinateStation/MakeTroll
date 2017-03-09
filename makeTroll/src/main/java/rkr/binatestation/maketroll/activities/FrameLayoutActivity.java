@@ -297,6 +297,9 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
             } else {
                 margin = margin - height;
             }
+            if (margin < 0) {
+                margin = 0;
+            }
         }
         layoutParams.setMargins(margin, margin, 0, 0);
     }
