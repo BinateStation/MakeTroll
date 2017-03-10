@@ -10,3 +10,4 @@
 makeTroll/libs/
 *.apk
 *.jks
+apkAndKeyStore/
