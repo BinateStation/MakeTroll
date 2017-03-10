@@ -237,7 +237,16 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void onSaveCompleted() {
-        super.onBackPressed();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void addCell(ViewType viewType) {

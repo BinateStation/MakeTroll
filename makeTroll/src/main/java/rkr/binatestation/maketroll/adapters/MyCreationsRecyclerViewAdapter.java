@@ -44,28 +44,32 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
     }
 
     public void setFileList(Context context) {
-        File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context.getString(R.string.created));
-        if (directory.exists() && directory.isDirectory()) {
-            File[] fileList = directory.listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    return pathname.isFile();
-                }
-            });
-            this.mFileList.clear();
-            if (fileList != null && fileList.length > 1) {
-                Arrays.sort(fileList, new Comparator<File>() {
+        try {
+            File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context.getString(R.string.created));
+            if (directory.exists() && directory.isDirectory()) {
+                File[] fileList = directory.listFiles(new FileFilter() {
                     @Override
-                    public int compare(File object1, File object2) {
-                        return (object1.lastModified() > object2.lastModified()) ? -1 : 1;
+                    public boolean accept(File pathname) {
+                        return pathname.isFile();
                     }
                 });
+                this.mFileList.clear();
+                if (fileList != null && fileList.length > 1) {
+                    Arrays.sort(fileList, new Comparator<File>() {
+                        @Override
+                        public int compare(File object1, File object2) {
+                            return (object1.lastModified() > object2.lastModified()) ? -1 : 1;
+                        }
+                    });
+                }
+                if (fileList != null) {
+                    Collections.addAll(this.mFileList, fileList);
+                }
             }
-            if (fileList != null) {
-                Collections.addAll(this.mFileList, fileList);
-            }
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        notifyDataSetChanged();
     }
 
     @Override
