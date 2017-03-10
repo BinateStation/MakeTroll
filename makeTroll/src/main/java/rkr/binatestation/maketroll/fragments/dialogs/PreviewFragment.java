@@ -56,6 +56,7 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
         AppCompatImageButton whatsAppShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_whatsAppShare);
         AppCompatImageButton facebookShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_fbShare);
         AppCompatImageButton actionRemoveFileAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_action_remove_file);
+        AppCompatImageButton actionShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_share);
 
         if (whatsAppShareAppCompatImageButton != null) {
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
@@ -65,6 +66,10 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
         }
         if (actionRemoveFileAppCompatImageButton != null) {
             actionRemoveFileAppCompatImageButton.setOnClickListener(this);
+        }
+        if (actionShareAppCompatImageButton != null) {
+            actionShareAppCompatImageButton.setVisibility(View.VISIBLE);
+            actionShareAppCompatImageButton.setOnClickListener(this);
         }
 
         if (file != null) {
@@ -88,6 +93,10 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
             if (mPreviewListener != null) {
                 mPreviewListener.shareToFb();
             }
+        } else if (v.getId() == R.id.AIMC_share) {
+            if (mPreviewListener != null) {
+                mPreviewListener.share();
+            }
         } else if (v.getId() == R.id.AIMC_action_remove_file) {
             if (mPreviewListener != null) {
                 mPreviewListener.deleteFile();
@@ -101,6 +110,8 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
         void deleteFile();
 
         void shareToFb();
+
+        void share();
     }
 
 }

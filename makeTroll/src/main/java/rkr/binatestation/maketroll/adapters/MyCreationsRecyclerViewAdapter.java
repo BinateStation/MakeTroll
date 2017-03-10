@@ -113,11 +113,12 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PreviewFragment.PreviewListener {
         private AppCompatImageView appCompatImageView;
         private AppCompatImageButton whatsAppShareAppCompatImageButton;
         private AppCompatImageButton facebookShareAppCompatImageButton;
         private AppCompatImageButton actionRemoveFileAppCompatImageButton;
+        private AppCompatImageButton actionShareAppCompatImageButton;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -125,10 +126,12 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             whatsAppShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_whatsAppShare);
             facebookShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_fbShare);
             actionRemoveFileAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_action_remove_file);
+            actionShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_share);
 
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
             facebookShareAppCompatImageButton.setOnClickListener(this);
             actionRemoveFileAppCompatImageButton.setOnClickListener(this);
+            actionShareAppCompatImageButton.setOnClickListener(this);
             appCompatImageView.setOnClickListener(this);
         }
 
@@ -137,7 +140,9 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             if (v.getId() == R.id.AIMC_whatsAppShare) {
                 shareToWhatsApp();
             } else if (v.getId() == R.id.AIMC_fbShare) {
-                shareFb();
+                shareToFb();
+            } else if (v.getId() == R.id.AIMC_share) {
+                share();
             } else if (v.getId() == R.id.AIMC_action_remove_file) {
                 deleteFile();
             } else if (v.getId() == R.id.AIMC_image_view) {
@@ -146,26 +151,12 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
 
         private void loadPreviewDialog() {
-            PreviewFragment previewFragment = PreviewFragment.newInstance(mFileList.get(getAdapterPosition()), new PreviewFragment.PreviewListener() {
-                @Override
-                public void shareToWhatsApp() {
-                    ViewHolder.this.shareToWhatsApp();
-                }
-
-                @Override
-                public void deleteFile() {
-                    ViewHolder.this.deleteFile();
-                }
-
-                @Override
-                public void shareToFb() {
-                    ViewHolder.this.shareFb();
-                }
-            });
+            PreviewFragment previewFragment = PreviewFragment.newInstance(mFileList.get(getAdapterPosition()), this);
             previewFragment.show(mChildFragmentManager, previewFragment.getTag());
         }
 
-        private void deleteFile() {
+        @Override
+        public void deleteFile() {
             Context context = itemView.getContext();
             if (context != null) {
                 Utils.showAlert(
@@ -191,7 +182,19 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             }
         }
 
-        private void shareToWhatsApp() {
+        @Override
+        public void shareToFb() {
+            if (mFbShareListener != null) {
+                File file = mFileList.get(getAdapterPosition());
+                if (file != null) {
+                    Uri uri = Uri.fromFile(file);
+                    mFbShareListener.shareToFacebook(uri);
+                }
+            }
+        }
+
+        @Override
+        public void shareToWhatsApp() {
             Context context = whatsAppShareAppCompatImageButton.getContext();
             if (isPackageInstalled("com.whatsapp", context)) {
                 File file = mFileList.get(getAdapterPosition());
@@ -207,14 +210,19 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             }
         }
 
-        private void shareFb() {
-            if (mFbShareListener != null) {
-                File file = mFileList.get(getAdapterPosition());
-                if (file != null) {
-                    Uri uri = Uri.fromFile(file);
-                    mFbShareListener.shareToFacebook(uri);
-                }
+        @Override
+        public void share() {
+            Context context = whatsAppShareAppCompatImageButton.getContext();
+            File file = mFileList.get(getAdapterPosition());
+            if (file != null) {
+                Uri uri = Uri.fromFile(file);
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                sendIntent.setType("image/jpeg");
+                context.startActivity(sendIntent);
             }
         }
+
     }
 }
