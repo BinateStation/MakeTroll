@@ -21,7 +21,6 @@
     <string name="external_directory_permission_alert_msg">To save this created image, we need permission to access your external storage..!</string>
     <string name="on_back_press_alert_message">Are you sure you want to exit without saving this image ?</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="help">Help</string>
     <string name="delete_image_confirmation_msg">Are you sure you want to delete this image ?</string>
     <string name="save_confirmation_msg">Are you sure you want to save this frame ?</string>
@@ -29,4 +28,6 @@
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://www.piclo.in\",\n  }\n}]</string>
     <string name="permission_denied_msg">We are unable to save the frame because you denied storage permission, please allow permission and try again.</string>
     <string name="share">Share</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
