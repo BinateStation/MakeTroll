@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import rkr.binatestation.maketroll.R;
@@ -26,7 +25,7 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
  */
 
 public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private JSONArray jsonArray;
+    private List<String> mImageEndUrls = new ArrayList<>();
     private Set<String> selectedImages = new HashSet<>();
     private boolean mShowsDialog;
     private View.OnClickListener mOnClickListener;
@@ -36,8 +35,8 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         mOnClickListener = onClickListener;
     }
 
-    public void setJsonArray(JSONArray jsonArray) {
-        this.jsonArray = jsonArray;
+    public void setImageEndUrls(List<String> imageEndUrls) {
+        this.mImageEndUrls = imageEndUrls;
         notifyDataSetChanged();
     }
 
@@ -101,31 +100,19 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     private String getItem(int position) {
-        if (jsonArray != null) {
-            if (mShowsDialog) {
-                return jsonArray.optString(position - 1);
-            } else {
-                return jsonArray.optString(position);
-            }
+        if (mShowsDialog) {
+            return mImageEndUrls.get(position - 1);
         } else {
-            return null;
+            return mImageEndUrls.get(position);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (jsonArray != null) {
-            if (mShowsDialog) {
-                return jsonArray.length() + 1;
-            } else {
-                return jsonArray.length();
-            }
+        if (mShowsDialog) {
+            return mImageEndUrls.size() + 1;
         } else {
-            if (mShowsDialog) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return mImageEndUrls.size();
         }
     }
 

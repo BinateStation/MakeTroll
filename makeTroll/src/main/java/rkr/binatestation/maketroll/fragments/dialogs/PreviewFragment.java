@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import java.io.File;
 
 import rkr.binatestation.maketroll.R;
+import rkr.binatestation.maketroll.interfaces.MyCreationsListener;
 
 /**
  * Dialog fragment to preview the cell
@@ -24,21 +25,23 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
 
     private static final String TAG = "PreviewFragment";
 
-    private File file;
-    private PreviewListener mPreviewListener;
+    private File mFile;
+    private MyCreationsListener mMyCreationsListener;
+    private int mPosition;
 
     public PreviewFragment() {
         // Required empty public constructor
     }
 
-    public static PreviewFragment newInstance(File file, PreviewListener previewListener) {
-        Log.d(TAG, "newInstance() called with: file = [" + file + "]");
+    public static PreviewFragment newInstance(File file, int position, MyCreationsListener previewListener) {
+        Log.d(TAG, "newInstance() called with: mFile = [" + file + "]");
         Bundle args = new Bundle();
 
         PreviewFragment fragment = new PreviewFragment();
         fragment.setArguments(args);
-        fragment.file = file;
-        fragment.mPreviewListener = previewListener;
+        fragment.mFile = file;
+        fragment.mPosition = position;
+        fragment.mMyCreationsListener = previewListener;
         return fragment;
     }
 
@@ -72,8 +75,8 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
             actionShareAppCompatImageButton.setOnClickListener(this);
         }
 
-        if (file != null) {
-            Uri uri = Uri.fromFile(file);
+        if (mFile != null) {
+            Uri uri = Uri.fromFile(mFile);
             appCompatImageView.setImageURI(uri);
         } else {
             appCompatImageView.setImageDrawable(ContextCompat.getDrawable(
@@ -86,32 +89,24 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.AIMC_whatsAppShare) {
-            if (mPreviewListener != null) {
-                mPreviewListener.shareToWhatsApp();
+            if (mMyCreationsListener != null) {
+                mMyCreationsListener.shareToWhatsApp(mFile);
             }
         } else if (v.getId() == R.id.AIMC_fbShare) {
-            if (mPreviewListener != null) {
-                mPreviewListener.shareToFb();
+            if (mMyCreationsListener != null) {
+                Uri uri = Uri.fromFile(mFile);
+                mMyCreationsListener.shareToFacebook(uri);
             }
         } else if (v.getId() == R.id.AIMC_share) {
-            if (mPreviewListener != null) {
-                mPreviewListener.share();
+            if (mMyCreationsListener != null) {
+                mMyCreationsListener.share(mFile);
             }
         } else if (v.getId() == R.id.AIMC_action_remove_file) {
-            if (mPreviewListener != null) {
-                mPreviewListener.deleteFile();
+            if (mMyCreationsListener != null) {
+                mMyCreationsListener.deleteFile(mFile, mPosition);
+                dismiss();
             }
         }
-    }
-
-    public interface PreviewListener {
-        void shareToWhatsApp();
-
-        void deleteFile();
-
-        void shareToFb();
-
-        void share();
     }
 
 }

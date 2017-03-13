@@ -15,6 +15,8 @@ public class WebServiceUtils {
         ContentValues params = new ContentValues();
         params.put(KEY_SEARCH, query);
 
-        WebService.startActionApiCall(context, URL_SEARCH, params, receiver);
+        if (context != null) {
+            WebService.startActionApiCall(context, URL_SEARCH, params, receiver);
+        }
     }
 }

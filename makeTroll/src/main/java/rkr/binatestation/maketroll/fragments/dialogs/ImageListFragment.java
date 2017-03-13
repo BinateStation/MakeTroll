@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ImageListRecyclerViewAdapter;
@@ -105,19 +106,23 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
     }
 
     private void getImageList(String query) {
-        WebServiceUtils.search(getContext(), query, new ServerResponseReceiver(new Handler(), new ServerResponseReceiver.Receiver() {
-            @Override
-            public void onServerResponse(int resultCode, JSONObject resultData, String message) {
-                if (resultCode == 200) {
-                    parseServerResponse(resultData);
+        try {
+            WebServiceUtils.search(getContext(), query, new ServerResponseReceiver(new Handler(), new ServerResponseReceiver.Receiver() {
+                @Override
+                public void onServerResponse(int resultCode, JSONObject resultData, String message) {
+                    if (resultCode == 200) {
+                        parseServerResponse(resultData);
+                    }
                 }
-            }
 
-            @Override
-            public void onUpdateProgress(int progress) {
+                @Override
+                public void onUpdateProgress(int progress) {
 
-            }
-        }));
+                }
+            }));
+        } catch (Exception e) {
+            Log.e(TAG, "getImageList: ", e);
+        }
     }
 
     private void parseServerResponse(JSONObject jsonObject) {
@@ -126,7 +131,11 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
             if (200 == status) {
                 JSONArray jsonArray = jsonObject.optJSONArray(KEY_DATA);
                 if (jsonArray != null && mImageListRecyclerViewAdapter != null) {
-                    mImageListRecyclerViewAdapter.setJsonArray(jsonArray);
+                    List<String> stringList = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        stringList.add(jsonArray.optString(i));
+                    }
+                    mImageListRecyclerViewAdapter.setImageEndUrls(stringList);
                 }
             }
         }

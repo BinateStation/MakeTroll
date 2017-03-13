@@ -1,12 +1,11 @@
 package rkr.binatestation.maketroll.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
@@ -24,9 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import rkr.binatestation.maketroll.R;
-import rkr.binatestation.maketroll.fragments.dialogs.PreviewFragment;
-import rkr.binatestation.maketroll.interfaces.FbShareListener;
-import rkr.binatestation.maketroll.utils.Utils;
+import rkr.binatestation.maketroll.interfaces.MyCreationsListener;
 
 /**
  * Created by RKR on 22-02-2017.
@@ -35,12 +32,10 @@ import rkr.binatestation.maketroll.utils.Utils;
 
 public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreationsRecyclerViewAdapter.ViewHolder> {
     private List<File> mFileList = new ArrayList<>();
-    private FragmentManager mChildFragmentManager;
-    private FbShareListener mFbShareListener;
+    private MyCreationsListener mMyCreationsListener;
 
-    public MyCreationsRecyclerViewAdapter(FragmentManager childFragmentManager, FbShareListener fbShareListener) {
-        mChildFragmentManager = childFragmentManager;
-        mFbShareListener = fbShareListener;
+    public MyCreationsRecyclerViewAdapter(MyCreationsListener myCreationsListener) {
+        mMyCreationsListener = myCreationsListener;
     }
 
     public void setFileList(Context context) {
@@ -72,6 +67,13 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
     }
 
+    public void removeFile(int position) {
+        if (position >= 0) {
+            mFileList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
@@ -87,8 +89,11 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
     public void onBindViewHolder(ViewHolder holder, int position) {
         File file = mFileList.get(position);
         if (file != null) {
-            Uri uri = Uri.fromFile(file);
-            holder.appCompatImageView.setImageURI(uri);
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            Bitmap resized = ThumbnailUtils.extractThumbnail(bitmap, width / 2, height / 2);
+            holder.appCompatImageView.setImageBitmap(resized);
         } else {
             holder.appCompatImageView.setImageDrawable(ContextCompat.getDrawable(
                     holder.appCompatImageView.getContext(),
@@ -97,23 +102,12 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         }
     }
 
-
     @Override
     public int getItemCount() {
         return mFileList == null ? 0 : mFileList.size();
     }
 
-    private boolean isPackageInstalled(String packageName, Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PreviewFragment.PreviewListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private AppCompatImageView appCompatImageView;
         private AppCompatImageButton whatsAppShareAppCompatImageButton;
         private AppCompatImageButton facebookShareAppCompatImageButton;
@@ -127,6 +121,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             facebookShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_fbShare);
             actionRemoveFileAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_action_remove_file);
             actionShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_share);
+            actionShareAppCompatImageButton.setVisibility(View.GONE);
 
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
             facebookShareAppCompatImageButton.setOnClickListener(this);
@@ -138,91 +133,35 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.AIMC_whatsAppShare) {
-                shareToWhatsApp();
+                int position = getAdapterPosition();
+                if (mMyCreationsListener != null && position >= 0) {
+                    File file = mFileList.get(position);
+                    mMyCreationsListener.shareToWhatsApp(file);
+                }
             } else if (v.getId() == R.id.AIMC_fbShare) {
-                shareToFb();
+                int position = getAdapterPosition();
+                if (mMyCreationsListener != null && position >= 0) {
+                    File file = mFileList.get(position);
+                    Uri uri = Uri.fromFile(file);
+                    mMyCreationsListener.shareToFacebook(uri);
+                }
             } else if (v.getId() == R.id.AIMC_share) {
-                share();
+                int position = getAdapterPosition();
+                if (mMyCreationsListener != null && position >= 0) {
+                    File file = mFileList.get(position);
+                    mMyCreationsListener.share(file);
+                }
             } else if (v.getId() == R.id.AIMC_action_remove_file) {
-                deleteFile();
+                int position = getAdapterPosition();
+                if (mMyCreationsListener != null && position >= 0) {
+                    mMyCreationsListener.deleteFile(mFileList.get(position), position);
+                }
             } else if (v.getId() == R.id.AIMC_image_view) {
-                loadPreviewDialog();
-            }
-        }
-
-        private void loadPreviewDialog() {
-            PreviewFragment previewFragment = PreviewFragment.newInstance(mFileList.get(getAdapterPosition()), this);
-            previewFragment.show(mChildFragmentManager, previewFragment.getTag());
-        }
-
-        @Override
-        public void deleteFile() {
-            Context context = itemView.getContext();
-            if (context != null) {
-                Utils.showAlert(
-                        context,
-                        context.getString(android.R.string.dialog_alert_title),
-                        context.getString(R.string.delete_image_confirmation_msg),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (DialogInterface.BUTTON_POSITIVE == which) {
-                                    File file = mFileList.get(getAdapterPosition());
-                                    if (file != null && file.exists() && file.isFile()) {
-                                        if (file.delete()) {
-                                            mFileList.remove(getAdapterPosition());
-                                            notifyItemRemoved(getAdapterPosition());
-                                        }
-                                    }
-                                }
-                                dialog.dismiss();
-                            }
-                        }
-                );
-            }
-        }
-
-        @Override
-        public void shareToFb() {
-            if (mFbShareListener != null) {
-                File file = mFileList.get(getAdapterPosition());
-                if (file != null) {
-                    Uri uri = Uri.fromFile(file);
-                    mFbShareListener.shareToFacebook(uri);
+                int position = getAdapterPosition();
+                if (mMyCreationsListener != null && position >= 0) {
+                    mMyCreationsListener.loadPreviewDialog(mFileList.get(position), position);
                 }
             }
         }
-
-        @Override
-        public void shareToWhatsApp() {
-            Context context = whatsAppShareAppCompatImageButton.getContext();
-            if (isPackageInstalled("com.whatsapp", context)) {
-                File file = mFileList.get(getAdapterPosition());
-                if (file != null) {
-                    Uri uri = Uri.fromFile(file);
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    sendIntent.setType("image/jpeg");
-                    sendIntent.setPackage("com.whatsapp");
-                    context.startActivity(sendIntent);
-                }
-            }
-        }
-
-        @Override
-        public void share() {
-            Context context = whatsAppShareAppCompatImageButton.getContext();
-            File file = mFileList.get(getAdapterPosition());
-            if (file != null) {
-                Uri uri = Uri.fromFile(file);
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                sendIntent.setType("image/jpeg");
-                context.startActivity(sendIntent);
-            }
-        }
-
     }
 }
