@@ -9,6 +9,6 @@
     <item
         android:width="@dimen/card_min_height"
         android:height="@dimen/card_min_height"
-        android:drawable="@mipmap/ic_launcher"
+        android:drawable="@drawable/ic_trollmaker_logo"
         android:gravity="center" />
 </layer-list>

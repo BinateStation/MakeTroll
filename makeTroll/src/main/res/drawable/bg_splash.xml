@@ -7,6 +7,6 @@
     </item>
 
     <item
-        android:drawable="@mipmap/ic_launcher"
+        android:drawable="@drawable/ic_trollmaker_logo"
         android:gravity="center" />
 </layer-list>
