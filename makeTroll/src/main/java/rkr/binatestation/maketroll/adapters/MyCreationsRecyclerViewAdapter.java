@@ -7,12 +7,12 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -109,19 +109,19 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private AppCompatImageView appCompatImageView;
-        private AppCompatImageButton whatsAppShareAppCompatImageButton;
-        private AppCompatImageButton facebookShareAppCompatImageButton;
-        private AppCompatImageButton actionRemoveFileAppCompatImageButton;
-        private AppCompatImageButton actionShareAppCompatImageButton;
+        private ImageView whatsAppShareAppCompatImageButton;
+        private ImageView facebookShareAppCompatImageButton;
+        private ImageView actionRemoveFileAppCompatImageButton;
+        private ImageView actionShareAppCompatImageButton;
 
         ViewHolder(View itemView) {
             super(itemView);
             appCompatImageView = (AppCompatImageView) itemView.findViewById(R.id.AIMC_image_view);
-            whatsAppShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_whatsAppShare);
-            facebookShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_fbShare);
-            actionRemoveFileAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_action_remove_file);
-            actionShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_share);
-            actionShareAppCompatImageButton.setVisibility(View.INVISIBLE);
+            whatsAppShareAppCompatImageButton = (ImageView) itemView.findViewById(R.id.AIMC_whatsAppShare);
+            facebookShareAppCompatImageButton = (ImageView) itemView.findViewById(R.id.AIMC_fbShare);
+            actionRemoveFileAppCompatImageButton = (ImageView) itemView.findViewById(R.id.AIMC_action_remove_file);
+            actionShareAppCompatImageButton = (ImageView) itemView.findViewById(R.id.AIMC_share);
+            actionShareAppCompatImageButton.setVisibility(View.GONE);
 
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
             facebookShareAppCompatImageButton.setOnClickListener(this);

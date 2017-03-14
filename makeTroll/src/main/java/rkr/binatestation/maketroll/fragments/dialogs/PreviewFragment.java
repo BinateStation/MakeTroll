@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.io.File;
 
@@ -56,10 +56,10 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
 
 
         AppCompatImageView appCompatImageView = (AppCompatImageView) view.findViewById(R.id.AIMC_image_view);
-        AppCompatImageButton whatsAppShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_whatsAppShare);
-        AppCompatImageButton facebookShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_fbShare);
-        AppCompatImageButton actionRemoveFileAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_action_remove_file);
-        AppCompatImageButton actionShareAppCompatImageButton = (AppCompatImageButton) view.findViewById(R.id.AIMC_share);
+        ImageView whatsAppShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_whatsAppShare);
+        ImageView facebookShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_fbShare);
+        ImageView actionRemoveFileAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_action_remove_file);
+        ImageView actionShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_share);
 
         if (whatsAppShareAppCompatImageButton != null) {
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
