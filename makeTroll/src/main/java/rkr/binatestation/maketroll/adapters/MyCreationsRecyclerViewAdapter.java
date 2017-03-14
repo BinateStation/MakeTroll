@@ -121,7 +121,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
             facebookShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_fbShare);
             actionRemoveFileAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_action_remove_file);
             actionShareAppCompatImageButton = (AppCompatImageButton) itemView.findViewById(R.id.AIMC_share);
-            actionShareAppCompatImageButton.setVisibility(View.GONE);
+            actionShareAppCompatImageButton.setVisibility(View.INVISIBLE);
 
             whatsAppShareAppCompatImageButton.setOnClickListener(this);
             facebookShareAppCompatImageButton.setOnClickListener(this);
