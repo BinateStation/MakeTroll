@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -66,6 +67,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private boolean mIsBold;
     private boolean mIsItalic;
     private boolean mIsUnderLine;
+    private Handler mHandler = new Handler();
 
     public CellFragment() {
         // Required empty public constructor
@@ -361,7 +363,12 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
     private void showImagePicker() {
         Log.d(TAG, "showImagePicker() called");
-        PickImageDialog.build(new PickSetup()).show(getActivity()).setOnPickResult(this);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                PickImageDialog.build(new PickSetup()).show(getActivity()).setOnPickResult(CellFragment.this);
+            }
+        });
     }
 
     private void bringToFrontCell() {
