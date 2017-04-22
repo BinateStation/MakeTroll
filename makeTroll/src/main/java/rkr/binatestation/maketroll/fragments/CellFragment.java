@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -23,10 +22,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.vansuita.pickimage.bean.PickResult;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickResult;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.fragments.dialogs.TextEditorFragment;
@@ -41,7 +36,7 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, IPickResult {
+public class CellFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
 
     private static final String TAG = "CellFragment";
     private float mLastY = Float.MIN_VALUE;
@@ -63,11 +58,10 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
     private String mLabelText = "";
     private int mTextColor = Color.WHITE;
     private int mBgColor = Color.GRAY;
-    private float mTextSize = 12;
+    private float mTextSize = 20;
     private boolean mIsBold;
     private boolean mIsItalic;
     private boolean mIsUnderLine;
-    private Handler mHandler = new Handler();
 
     public CellFragment() {
         // Required empty public constructor
@@ -135,13 +129,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             actionBringToFrontImageButton.setOnClickListener(this);
 
             mAttache = new PhotoViewAttacher(mActionAddImage);
-            mAttache.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                @Override
-                public void onPhotoTap(View view, float x, float y) {
-                    showImagePicker();
-                }
-            });
-
             mAttache.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -271,9 +258,6 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                 mCellFragmentListener.remove(mPosition, this);
             }
 
-        } else if (i == R.id.AIF_action_add_image) {
-            showImagePicker();
-
         } else if (i == R.id.CL_action_edit) {
             showTextEditorFragment();
 
@@ -329,13 +313,18 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             if (bitmap != null) {
                 mActionAddImage.setImageBitmap(bitmap);
             } else if (mItemModel.getEndUrl() != null) {
-                String url = URL_LIVE_IMAGE + mItemModel.getEndUrl();
+                String url;
+                if (mItemModel.isFromDevice()) {
+                    url = mItemModel.getEndUrl();
+                } else {
+                    url = URL_LIVE_IMAGE + mItemModel.getEndUrl();
+                }
                 Context context = mActionAddImage.getContext();
                 Glide.with(context)
                         .load(url)
                         .asBitmap()
-                        .placeholder(R.drawable.gallery)
-                        .error(R.drawable.gallery)
+                        .placeholder(R.drawable.ic_image_black_24dp)
+                        .error(R.drawable.ic_image_black_24dp)
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -361,33 +350,12 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         }
     }
 
-    private void showImagePicker() {
-        Log.d(TAG, "showImagePicker() called");
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                PickImageDialog.build(new PickSetup()).show(getActivity()).setOnPickResult(CellFragment.this);
-            }
-        });
-    }
-
     private void bringToFrontCell() {
         if (mItemView != null) {
             mItemView.bringToFront();
         }
     }
 
-    @Override
-    public void onPickResult(PickResult pickResult) {
-        Throwable exception = pickResult.getError();
-        if (exception == null) {
-            mItemModel.setBitmap(pickResult.getBitmap());
-            setView();
-        } else {
-            Log.e(TAG, "onPickResult: ", exception);
-        }
-
-    }
 
     public interface CellFragmentListener {
         void invalidate();

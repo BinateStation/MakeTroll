@@ -34,7 +34,7 @@ public class TextEditorFragment extends DialogFragment {
     private TextEditorListener mTextEditorListener;
     private int mTextColor = Color.WHITE;
     private int mBgColor = Color.GRAY;
-    private float mTextSize = 12;
+    private float mTextSize = 20;
     private boolean mIsBold;
     private boolean mIsItalic;
     private boolean mIsUnderLine;

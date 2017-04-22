@@ -8,5 +8,5 @@ import java.util.ArrayList;
  */
 
 public interface ImageSelectedListener {
-    void onDone(ArrayList<String> imageUrlList);
+    void onDone(ArrayList<String> imageUrlList, boolean isFromDevice);
 }

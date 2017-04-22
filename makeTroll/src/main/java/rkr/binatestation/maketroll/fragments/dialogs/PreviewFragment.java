@@ -81,7 +81,7 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
         } else {
             appCompatImageView.setImageDrawable(ContextCompat.getDrawable(
                     appCompatImageView.getContext(),
-                    R.drawable.gallery
+                    R.drawable.ic_image_black_24dp
             ));
         }
     }

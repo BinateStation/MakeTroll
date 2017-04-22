@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MakeTroll.iml" filepath="$PROJECT_DIR$/MakeTroll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MakeTroll.iml" filepath="$PROJECT_DIR$/MakeTroll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/makeTroll/makeTroll.iml" filepath="$PROJECT_DIR$/makeTroll/makeTroll.iml" />
       <module fileurl="file://$PROJECT_DIR$/makeTroll/makeTroll.iml" filepath="$PROJECT_DIR$/makeTroll/makeTroll.iml" />
     </modules>
   </component>

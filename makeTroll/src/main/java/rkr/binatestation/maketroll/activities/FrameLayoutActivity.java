@@ -20,6 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,6 +37,7 @@ import rkr.binatestation.maketroll.models.ItemModel;
 import rkr.binatestation.maketroll.models.ViewType;
 import rkr.binatestation.maketroll.utils.Utils;
 
+import static rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment.REQUEST_CODE_PICKER;
 import static rkr.binatestation.maketroll.utils.Utils.showAlert;
 import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
@@ -59,7 +63,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         if (intent.hasExtra(KEY_ITEM_MODELS)) {
             ArrayList<String> itemModels = intent.getStringArrayListExtra(KEY_ITEM_MODELS);
             if (itemModels != null && itemModels.size() > 0) {
-                putSelectedCells(itemModels);
+                putSelectedCells(itemModels, false);
             }
         }
     }
@@ -274,10 +278,11 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         imageListFragment.show(getSupportFragmentManager(), imageListFragment.getTag());
     }
 
-    private void putSelectedCells(ArrayList<String> endUrls) {
+    private void putSelectedCells(ArrayList<String> endUrls, boolean isFromDevice) {
         for (String endUrl : endUrls) {
             ItemModel itemModel = new ItemModel(ViewType.SQUARE);
             itemModel.setEndUrl(endUrl);
+            itemModel.setFromDevice(isFromDevice);
             addCell(itemModel);
         }
     }
@@ -370,9 +375,24 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onDone(ArrayList<String> imageUrlList) {
+    public void onDone(ArrayList<String> imageUrlList, boolean isFromDevice) {
         if (imageUrlList != null && imageUrlList.size() > 0) {
-            putSelectedCells(imageUrlList);
+            putSelectedCells(imageUrlList, isFromDevice);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+            ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
+            if (images != null) {
+                ArrayList<String> imagePaths = new ArrayList<>();
+                for (Image image : images) {
+                    imagePaths.add(image.getPath());
+                }
+                onDone(imagePaths, true);
+            }
         }
     }
 }

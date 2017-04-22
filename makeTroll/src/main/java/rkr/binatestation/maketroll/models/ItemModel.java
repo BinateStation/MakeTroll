@@ -24,6 +24,7 @@ public class ItemModel implements Parcelable {
     private ViewType viewType;
     private Bitmap bitmap;
     private String endUrl;
+    private boolean isFromDevice;
 
 
     public ItemModel(ViewType viewType) {
@@ -33,6 +34,7 @@ public class ItemModel implements Parcelable {
     private ItemModel(Parcel in) {
         viewType = ViewType.valueOf(in.readString());
         bitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        isFromDevice = in.readInt() == 1;
     }
 
     public int describeContents() {
@@ -42,6 +44,7 @@ public class ItemModel implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(viewType.name());
         out.writeParcelable(bitmap, flags);
+        out.writeInt(isFromDevice ? 1 : 0);
     }
 
     public ViewType getViewType() {
@@ -66,6 +69,14 @@ public class ItemModel implements Parcelable {
 
     public void setEndUrl(String endUrl) {
         this.endUrl = endUrl;
+    }
+
+    public boolean isFromDevice() {
+        return isFromDevice;
+    }
+
+    public void setFromDevice(boolean fromDevice) {
+        isFromDevice = fromDevice;
     }
 }
 

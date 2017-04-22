@@ -97,7 +97,7 @@ public class MyCreationsRecyclerViewAdapter extends RecyclerView.Adapter<MyCreat
         } else {
             holder.appCompatImageView.setImageDrawable(ContextCompat.getDrawable(
                     holder.appCompatImageView.getContext(),
-                    R.drawable.gallery
+                    R.drawable.ic_image_black_24dp
             ));
         }
     }

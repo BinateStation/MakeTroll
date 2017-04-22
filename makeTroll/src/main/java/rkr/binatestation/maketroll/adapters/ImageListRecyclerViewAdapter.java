@@ -92,7 +92,7 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 Glide.with(context)
                         .load(url)
                         .centerCrop()
-                        .placeholder(R.drawable.gallery)
+                        .placeholder(R.drawable.ic_image_black_24dp)
                         .crossFade()
                         .into(viewHolderImageList.appCompatImageView);
             }

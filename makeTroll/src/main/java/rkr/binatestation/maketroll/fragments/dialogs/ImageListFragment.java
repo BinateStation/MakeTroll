@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,8 +36,8 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_STATUS;
  */
 public class ImageListFragment extends BottomSheetDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
+    public static final int REQUEST_CODE_PICKER = 100;
     private static final String TAG = "ImageListFragment";
-
     private ImageListRecyclerViewAdapter mImageListRecyclerViewAdapter;
     private View.OnClickListener mOnClickListener;
     private ImageSelectedListener mImageSelectedListener;
@@ -159,13 +161,23 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
         int id = v.getId();
         if (id == R.id.FIL_action_done) {
             if (mImageSelectedListener != null && mImageListRecyclerViewAdapter != null) {
-                mImageSelectedListener.onDone(mImageListRecyclerViewAdapter.getSelectedItemModel());
+                mImageSelectedListener.onDone(mImageListRecyclerViewAdapter.getSelectedItemModel(), false);
             }
+        } else if (id == R.id.FPFT_frame_square) {
+            showImagePicker();
         } else {
             if (mOnClickListener != null) {
                 mOnClickListener.onClick(v);
             }
         }
         dismiss();
+    }
+
+
+    private void showImagePicker() {
+        Log.d(TAG, "showImagePicker() called");
+        ImagePicker.create(getActivity())
+                .multi()
+                .start(REQUEST_CODE_PICKER);
     }
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 
+import rkr.binatestation.maketroll.BuildConfig;
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.MyCreationsRecyclerViewAdapter;
 import rkr.binatestation.maketroll.fragments.dialogs.PreviewFragment;
@@ -109,10 +111,12 @@ public class MyCreationsFragment extends Fragment implements MyCreationsListener
         Context context = getContext();
         if (isPackageInstalled("com.whatsapp", context)) {
             if (file != null) {
-                Uri uri = Uri.fromFile(file);
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        BuildConfig.APPLICATION_ID + ".imagepicker.provider",
+                        file);
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
                 sendIntent.setType("image/jpeg");
                 sendIntent.setPackage("com.whatsapp");
                 context.startActivity(sendIntent);
@@ -151,10 +155,12 @@ public class MyCreationsFragment extends Fragment implements MyCreationsListener
     public void share(File file) {
         Context context = getContext();
         if (file != null) {
-            Uri uri = Uri.fromFile(file);
+            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                    BuildConfig.APPLICATION_ID + ".imagepicker.provider",
+                    file);
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            sendIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
             sendIntent.setType("image/jpeg");
             context.startActivity(sendIntent);
         }
