@@ -186,12 +186,14 @@ public class WebService extends IntentService {
 
     private String writeBody(ContentValues values) {
         StringBuilder bodyBuilder = new StringBuilder();
-        for (String key : values.keySet()) {
-            if (bodyBuilder.length() != 0) {
-                bodyBuilder.append('&');
+        if (values != null) {
+            for (String key : values.keySet()) {
+                if (bodyBuilder.length() != 0) {
+                    bodyBuilder.append('&');
+                }
+                bodyBuilder.append(key).append('=')
+                        .append(values.getAsString(key));
             }
-            bodyBuilder.append(key).append('=')
-                    .append(values.getAsString(key));
         }
         return bodyBuilder.toString();
     }
@@ -199,13 +201,16 @@ public class WebService extends IntentService {
     // Reads an InputStream and converts it to a String.
     private String readIt(InputStream stream) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
+            if (stream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                return result.toString();
             }
-            return result.toString();
+            return "";
         } catch (IOException e) {
             e.printStackTrace();
             return "";

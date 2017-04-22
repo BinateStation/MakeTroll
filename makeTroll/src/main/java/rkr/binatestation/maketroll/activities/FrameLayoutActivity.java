@@ -195,7 +195,11 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && PackageManager.PERMISSION_GRANTED == grantResults[0]) {
-                saveFrame(mImageFrame);
+                try {
+                    saveFrame(mImageFrame);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 showAlertForDeny();
             }
@@ -230,7 +234,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
 
                     if (myFile != null) {
                         FileOutputStream out = new FileOutputStream(myFile);
-                        image.compress(Bitmap.CompressFormat.PNG, 90, out); //Output
+                        image.compress(Bitmap.CompressFormat.PNG, 50, out); //Output
                     }
                     onSaveCompleted();
                 } catch (FileNotFoundException e) {
