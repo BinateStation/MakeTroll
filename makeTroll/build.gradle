@@ -17,9 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    return true
     productFlavors {
     }
+    return true
 }
 allprojects {
     repositories {
