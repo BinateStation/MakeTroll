@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId 'rkr.binatestation.maketroll'
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 8
-        versionName '1.0.5'
+        versionCode 9
+        versionName '1.0.6'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -19,6 +18,8 @@ android {
         }
     }
     return true
+    productFlavors {
+    }
 }
 allprojects {
     repositories {

@@ -15,7 +15,7 @@
         android:contentDescription="@string/title_activity_home"
         android:cropToPadding="true"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_add_a_photo_black_24dp" />
+        android:src="@drawable/ic_image_black_24dp" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/AIF_action_remove_frame"

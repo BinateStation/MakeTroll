@@ -337,7 +337,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
             } else {
                 mActionAddImage.setImageDrawable(ContextCompat.getDrawable(
                         mActionAddImage.getContext(),
-                        R.drawable.ic_add_a_photo_black_24dp
+                        R.drawable.ic_image_black_24dp
                 ));
             }
             mAttache.update();
