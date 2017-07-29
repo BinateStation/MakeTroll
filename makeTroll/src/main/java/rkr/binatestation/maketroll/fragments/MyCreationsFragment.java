@@ -71,7 +71,7 @@ public class MyCreationsFragment extends Fragment implements MyCreationsListener
     @Override
     public void onResume() {
         super.onResume();
-        if (mMyCreationsRecyclerViewAdapter != null) {
+        if (mMyCreationsRecyclerViewAdapter != null && getContext() != null) {
             mMyCreationsRecyclerViewAdapter.setFileList(getContext());
         }
     }
