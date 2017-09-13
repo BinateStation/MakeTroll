@@ -65,6 +65,14 @@
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
 
+        <provider
+            android:name=".database.TrollMakerContentProvider"
+            android:authorities="${packageName}"
+            android:exported="false" />
+
+        <service
+            android:name=".database.DbActionsIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

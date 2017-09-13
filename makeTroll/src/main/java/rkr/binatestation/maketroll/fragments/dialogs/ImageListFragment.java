@@ -1,10 +1,14 @@
 package rkr.binatestation.maketroll.fragments.dialogs;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -19,10 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.adapters.ImageListRecyclerViewAdapter;
+import rkr.binatestation.maketroll.database.DbActionsIntentService;
+import rkr.binatestation.maketroll.database.TrollMakerContract;
 import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.web.ServerResponseReceiver;
 import rkr.binatestation.maketroll.web.WebServiceUtils;
@@ -34,7 +39,8 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_STATUS;
 /**
  * Bottom sheet dialog fragment to show the image list
  */
-public class ImageListFragment extends BottomSheetDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
+public class ImageListFragment extends BottomSheetDialogFragment implements SearchView.OnQueryTextListener,
+        View.OnClickListener, ServerResponseReceiver.Receiver, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int REQUEST_CODE_PICKER = 100;
     private static final String TAG = "ImageListFragment";
@@ -92,7 +98,12 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.FIL_image_list_recycler_view);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter(getShowsDialog(), this));
+        getImageListFromLocalDB();
         getImageList("");
+    }
+
+    private void getImageListFromLocalDB() {
+        getActivity().getSupportLoaderManager().initLoader(1, null, this);
     }
 
     @Override
@@ -109,19 +120,7 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
 
     private void getImageList(String query) {
         try {
-            WebServiceUtils.search(getContext(), query, new ServerResponseReceiver(new Handler(), new ServerResponseReceiver.Receiver() {
-                @Override
-                public void onServerResponse(int resultCode, JSONObject resultData, String message) {
-                    if (resultCode == 200) {
-                        parseServerResponse(resultData);
-                    }
-                }
-
-                @Override
-                public void onUpdateProgress(int progress) {
-
-                }
-            }));
+            WebServiceUtils.search(getContext(), query, new ServerResponseReceiver(new Handler(), this));
         } catch (Exception e) {
             Log.e(TAG, "getImageList: ", e);
         }
@@ -133,11 +132,12 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
             if (200 == status) {
                 JSONArray jsonArray = jsonObject.optJSONArray(KEY_DATA);
                 if (jsonArray != null && mImageListRecyclerViewAdapter != null) {
-                    List<String> stringList = new ArrayList<>();
+                    ArrayList<String> stringList = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         stringList.add(jsonArray.optString(i));
                     }
                     mImageListRecyclerViewAdapter.setImageEndUrls(stringList);
+                    DbActionsIntentService.startActionSaveFiles(getContext(), stringList);
                 }
             }
         }
@@ -179,5 +179,53 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
         ImagePicker.create(getActivity())
                 .multi()
                 .start(REQUEST_CODE_PICKER);
+    }
+
+    @Override
+    public void onServerResponse(int resultCode, JSONObject resultData, String message) {
+        if (resultCode == 200) {
+            parseServerResponse(resultData);
+        }
+    }
+
+    @Override
+    public void onUpdateProgress(int progress) {
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getContext(),
+                TrollMakerContract.FilePaths.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        loadDataFromCursor(data);
+    }
+
+    private void loadDataFromCursor(Cursor data) {
+        if (data != null) {
+            if (data.moveToFirst()) {
+                ArrayList<String> filePaths = new ArrayList<>();
+                do {
+                    filePaths.add(data.getString(data.getColumnIndex(TrollMakerContract.FilePaths.COLUMN_FILE_PATH)));
+                } while (data.moveToNext());
+                if (mImageListRecyclerViewAdapter != null) {
+                    mImageListRecyclerViewAdapter.setImageEndUrls(filePaths);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
