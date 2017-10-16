@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -16,8 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 import rkr.binatestation.maketroll.R;
+import rkr.binatestation.maketroll.models.ErrorModel;
 
-import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE;
+import static rkr.binatestation.maketroll.utils.Constants.URL_LIVE_IMAGE;
 
 /**
  * Created by RKR on 22-02-2017.
@@ -25,7 +28,7 @@ import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE
  */
 
 public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<String> mImageEndUrls = new ArrayList<>();
+    private List<Object> mImageEndUrls = new ArrayList<>();
     private Set<String> selectedImages = new HashSet<>();
     private boolean mShowsDialog;
     private View.OnClickListener mOnClickListener;
@@ -35,8 +38,11 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         mOnClickListener = onClickListener;
     }
 
-    public void setImageEndUrls(List<String> imageEndUrls) {
+    public void setImageEndUrls(List<Object> imageEndUrls) {
         this.mImageEndUrls = imageEndUrls;
+        if (imageEndUrls.size() < 1) {
+            this.mImageEndUrls.add(ErrorModel.getEmptyModel());
+        }
         notifyDataSetChanged();
     }
 
@@ -59,47 +65,63 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             return new ViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_image_list, parent, false)
             );
-        } else {
+        } else if (viewType == 1) {
             return new DevicePickerViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_pick_frame_type, parent, false)
+            );
+        } else {
+            return new ErrorViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.error_item, parent, false)
             );
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mShowsDialog && position == 0) {
-            return 1;
+        Object object = getItem(position);
+        if (object instanceof String) {
+            if (mShowsDialog && position == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
         } else {
-            return 2;
+            return 3;
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == 2 && holder instanceof ViewHolder) {
-            ViewHolder viewHolderImageList = (ViewHolder) holder;
-            String item = getItem(position);
-            if (item != null) {
-                if (selectedImages.contains(item)) {
-                    viewHolderImageList.maskView.setVisibility(View.VISIBLE);
-                } else {
-                    viewHolderImageList.maskView.setVisibility(View.INVISIBLE);
-                }
+        if (holder instanceof ErrorViewHolder) {
+            ErrorViewHolder errorViewHolder = (ErrorViewHolder) holder;
+            errorViewHolder.bindView(getItem(position));
+        } else {
+            if (getItemViewType(position) == 2 && holder instanceof ViewHolder) {
+                ViewHolder viewHolderImageList = (ViewHolder) holder;
+                Object object = getItem(position);
+                if (object instanceof String) {
+                    String item = (String) object;
 
-                String url = URL_LIVE_IMAGE + item;
-                Context context = viewHolderImageList.appCompatImageView.getContext();
-                Glide.with(context)
-                        .load(url)
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_image_black_24dp)
-                        .crossFade()
-                        .into(viewHolderImageList.appCompatImageView);
+                    if (selectedImages.contains(item)) {
+                        viewHolderImageList.maskView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolderImageList.maskView.setVisibility(View.INVISIBLE);
+                    }
+
+                    String url = URL_LIVE_IMAGE + item;
+                    Context context = viewHolderImageList.appCompatImageView.getContext();
+                    Glide.with(context)
+                            .load(url)
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_image_black_24dp)
+                            .crossFade()
+                            .into(viewHolderImageList.appCompatImageView);
+                }
             }
         }
     }
 
-    private String getItem(int position) {
+    private Object getItem(int position) {
         if (mShowsDialog) {
             return mImageEndUrls.get(position - 1);
         } else {
@@ -122,23 +144,47 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
         ViewHolder(View itemView) {
             super(itemView);
-            appCompatImageView = (AppCompatImageView) itemView.findViewById(R.id.AIIL_image);
+            appCompatImageView = itemView.findViewById(R.id.AIIL_image);
             maskView = itemView.findViewById(R.id.AIIL_mask_view);
             appCompatImageView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            final String key = getItem(getAdapterPosition());
-            if (selectedImages.contains(key)) {
-                selectedImages.remove(key);
-                maskView.setVisibility(View.GONE);
-            } else {
-                final int height = v.getHeight();
-                final int width = v.getWidth();
-                selectedImages.add(key);
-                maskView.setLayoutParams(new CardView.LayoutParams(width, height));
-                maskView.setVisibility(View.VISIBLE);
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                Object object = getItem(getAdapterPosition());
+                if (object instanceof String) {
+                    String key = (String) object;
+                    if (selectedImages.contains(key)) {
+                        selectedImages.remove(key);
+                        maskView.setVisibility(View.GONE);
+                    } else {
+                        final int height = v.getHeight();
+                        final int width = v.getWidth();
+                        selectedImages.add(key);
+                        maskView.setLayoutParams(new CardView.LayoutParams(width, height));
+                        maskView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
+    private class ErrorViewHolder extends RecyclerView.ViewHolder {
+        private ImageView appCompatImageView;
+        private TextView message;
+
+        ErrorViewHolder(View itemView) {
+            super(itemView);
+            appCompatImageView = itemView.findViewById(R.id.imageView);
+            message = itemView.findViewById(R.id.message);
+        }
+
+        void bindView(Object object) {
+            if (object instanceof ErrorModel) {
+                ErrorModel errorModel = (ErrorModel) object;
+                message.setText(errorModel.getMessage());
+                appCompatImageView.setImageResource(errorModel.getIcon());
             }
         }
     }

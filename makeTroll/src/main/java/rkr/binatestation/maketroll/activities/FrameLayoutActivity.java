@@ -38,8 +38,8 @@ import rkr.binatestation.maketroll.models.ViewType;
 import rkr.binatestation.maketroll.utils.Utils;
 
 import static rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment.REQUEST_CODE_PICKER;
+import static rkr.binatestation.maketroll.utils.Constants.KEY_ITEM_MODELS;
 import static rkr.binatestation.maketroll.utils.Utils.showAlert;
-import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
 
 public class FrameLayoutActivity extends AppCompatActivity implements View.OnClickListener,
         CellFragment.CellFragmentListener, ImageSelectedListener {
@@ -56,7 +56,7 @@ public class FrameLayoutActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frame_layout);
 
-        mImageFrame = (FrameLayout) findViewById(R.id.activity_frame_layout_image_frame);
+        mImageFrame = findViewById(R.id.activity_frame_layout_image_frame);
         mWaterMarkView = findViewById(R.id.AFL_water_mark);
 
         Intent intent = getIntent();

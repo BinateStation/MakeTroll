@@ -23,7 +23,7 @@ import rkr.binatestation.maketroll.adapters.ViewPagerAdapter;
 import rkr.binatestation.maketroll.fragments.MyCreationsFragment;
 import rkr.binatestation.maketroll.fragments.dialogs.ImageListFragment;
 
-import static rkr.binatestation.maketroll.web.WebServiceConstants.KEY_ITEM_MODELS;
+import static rkr.binatestation.maketroll.utils.Constants.KEY_ITEM_MODELS;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
@@ -33,10 +33,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.AH_toolbar);
+        Toolbar toolbar = findViewById(R.id.AH_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton createFrameFab = (FloatingActionButton) findViewById(R.id.AH_add_frame);
+        FloatingActionButton createFrameFab = findViewById(R.id.AH_add_frame);
         createFrameFab.setColorFilter(Color.WHITE);
         createFrameFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,13 +45,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.AH_view_pager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.AH_tab_layout);
+        ViewPager viewPager = findViewById(R.id.AH_view_pager);
+        TabLayout tabLayout = findViewById(R.id.AH_tab_layout);
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager, true);
         setupViewPager(viewPager);
 
-        AdView adView = (AdView) findViewById(R.id.adView);
+        AdView adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }

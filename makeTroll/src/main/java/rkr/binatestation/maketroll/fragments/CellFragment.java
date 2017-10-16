@@ -30,8 +30,8 @@ import rkr.binatestation.maketroll.models.ViewType;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static android.view.MotionEvent.ACTION_DOWN;
+import static rkr.binatestation.maketroll.utils.Constants.URL_LIVE_IMAGE;
 import static rkr.binatestation.maketroll.utils.Utils.setTextStyle;
-import static rkr.binatestation.maketroll.web.WebServiceConstants.URL_LIVE_IMAGE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,11 +109,11 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         view.setOnClickListener(this);
 
         if (mItemModel != null && mItemModel.getViewType() != ViewType.TEXT) {
-            mActionAddImage = (ImageView) view.findViewById(R.id.AIF_action_add_image);
-            mActionRemoveFrame = (ImageButton) view.findViewById(R.id.AIF_action_remove_frame);
+            mActionAddImage = view.findViewById(R.id.AIF_action_add_image);
+            mActionRemoveFrame = view.findViewById(R.id.AIF_action_remove_frame);
             mMaskView = view.findViewById(R.id.AIF_mask_view);
-            ImageButton actionResizeImageButton = (ImageButton) view.findViewById(R.id.AIF_action_resize);
-            ImageButton dragHelper = (ImageButton) view.findViewById(R.id.AIF_drag_button);
+            ImageButton actionResizeImageButton = view.findViewById(R.id.AIF_action_resize);
+            ImageButton dragHelper = view.findViewById(R.id.AIF_drag_button);
             dragHelper.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -125,7 +125,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
 
             mActionRemoveFrame.setOnClickListener(this);
             mActionAddImage.setOnClickListener(this);
-            ImageButton actionBringToFrontImageButton = (ImageButton) view.findViewById(R.id.AIF_action_bring_to_front);
+            ImageButton actionBringToFrontImageButton = view.findViewById(R.id.AIF_action_bring_to_front);
             actionBringToFrontImageButton.setOnClickListener(this);
 
             mAttache = new PhotoViewAttacher(mActionAddImage);
@@ -146,7 +146,7 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
         } else {
             mLabelText = getString(R.string.title_activity_home);
             mBgColor = ContextCompat.getColor(getContext(), R.color.colorMask);
-            mLabelTextView = (TextView) view.findViewById(R.id.CL_label);
+            mLabelTextView = view.findViewById(R.id.CL_label);
             mLabelToolbarView = view.findViewById(R.id.CL_toolbar_layout);
             mLabelTextView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -155,13 +155,13 @@ public class CellFragment extends Fragment implements View.OnTouchListener, View
                     return true;
                 }
             });
-            ImageButton editLabelImageButton = (ImageButton) view.findViewById(R.id.CL_action_edit);
+            ImageButton editLabelImageButton = view.findViewById(R.id.CL_action_edit);
             editLabelImageButton.setOnClickListener(this);
 
-            ImageButton removeFrameImageButton = (ImageButton) view.findViewById(R.id.CL_action_remove_frame);
+            ImageButton removeFrameImageButton = view.findViewById(R.id.CL_action_remove_frame);
             removeFrameImageButton.setOnClickListener(this);
 
-            ImageButton actionBringToFront = (ImageButton) view.findViewById(R.id.CL_action_bring_to_front);
+            ImageButton actionBringToFront = view.findViewById(R.id.CL_action_bring_to_front);
             actionBringToFront.setOnClickListener(this);
 
         }
