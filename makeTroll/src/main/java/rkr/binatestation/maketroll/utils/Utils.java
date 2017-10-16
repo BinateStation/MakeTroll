@@ -30,7 +30,7 @@ public class Utils {
         try {
             image = File.createTempFile(
                     imageFileName,  /* prefix */
-                    ".png",         /* suffix */
+                    ".jpeg",         /* suffix */
                     storageDir      /* directory */
             );
         } catch (IOException e) {

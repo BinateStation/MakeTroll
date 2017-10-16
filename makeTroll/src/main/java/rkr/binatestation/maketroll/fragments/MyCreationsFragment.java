@@ -165,4 +165,5 @@ public class MyCreationsFragment extends Fragment implements MyCreationsListener
             context.startActivity(sendIntent);
         }
     }
+
 }

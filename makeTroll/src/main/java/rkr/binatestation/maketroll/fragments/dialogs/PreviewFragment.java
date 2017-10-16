@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.io.File;
 
@@ -56,23 +55,23 @@ public class PreviewFragment extends BottomSheetDialogFragment implements View.O
 
 
         AppCompatImageView appCompatImageView = (AppCompatImageView) view.findViewById(R.id.AIMC_image_view);
-        ImageView whatsAppShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_whatsAppShare);
-        ImageView facebookShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_fbShare);
-        ImageView actionRemoveFileAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_action_remove_file);
-        ImageView actionShareAppCompatImageButton = (ImageView) view.findViewById(R.id.AIMC_share);
+        View whatsAppShareView = view.findViewById(R.id.AIMC_whatsAppShare);
+        View facebookShareView = view.findViewById(R.id.AIMC_fbShare);
+        View actionRemoveView = view.findViewById(R.id.AIMC_action_remove_file);
+        View actionShareView = view.findViewById(R.id.AIMC_share);
 
-        if (whatsAppShareAppCompatImageButton != null) {
-            whatsAppShareAppCompatImageButton.setOnClickListener(this);
+        if (whatsAppShareView != null) {
+            whatsAppShareView.setOnClickListener(this);
         }
-        if (facebookShareAppCompatImageButton != null) {
-            facebookShareAppCompatImageButton.setOnClickListener(this);
+        if (facebookShareView != null) {
+            facebookShareView.setOnClickListener(this);
         }
-        if (actionRemoveFileAppCompatImageButton != null) {
-            actionRemoveFileAppCompatImageButton.setOnClickListener(this);
+        if (actionRemoveView != null) {
+            actionRemoveView.setOnClickListener(this);
         }
-        if (actionShareAppCompatImageButton != null) {
-            actionShareAppCompatImageButton.setVisibility(View.VISIBLE);
-            actionShareAppCompatImageButton.setOnClickListener(this);
+        if (actionShareView != null) {
+            actionShareView.setVisibility(View.VISIBLE);
+            actionShareView.setOnClickListener(this);
         }
 
         if (mFile != null) {
