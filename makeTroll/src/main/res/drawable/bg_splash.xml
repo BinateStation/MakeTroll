@@ -5,8 +5,4 @@
             <solid android:color="@color/colorPrimaryDark" />
         </shape>
     </item>
-
-    <item
-        android:drawable="@drawable/ic_trollmaker_logo"
-        android:gravity="center" />
 </layer-list>
