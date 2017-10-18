@@ -92,12 +92,14 @@ public final class TrollMakerContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FILE_PATHS).build();
         public static final String COLUMN_FILE_PATH = "file_path";
+        public static final String COLUMN_DESCRIPTION = "description";
         static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "." + PATH_FILE_PATHS;
         // Name of the workout temp table.
         static final String TABLE_NAME = PATH_FILE_PATHS;
         static final String SQL_CREATE_TABLE = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS +
                 _ID + INTEGER + PRIMARY_KEY + AUTOINCREMENT + COMMA +
-                COLUMN_FILE_PATH + TEXT + UNIQUE +
+                COLUMN_FILE_PATH + TEXT + UNIQUE + COMMA +
+                COLUMN_DESCRIPTION + TEXT +
                 CLOSE_PARENTHESIS + SEMI_COLON;
 
         // Returns the Uri referencing a workout temp with the specified id.

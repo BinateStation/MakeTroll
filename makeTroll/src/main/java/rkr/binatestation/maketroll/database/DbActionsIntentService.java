@@ -10,6 +10,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import rkr.binatestation.maketroll.models.DataModel;
+
 
 /**
  * IntentService used to do db actions in background thread.
@@ -41,12 +43,12 @@ public class DbActionsIntentService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionSaveFiles(Context context, ArrayList<String> filePaths) {
+    public static void startActionSaveFiles(Context context, ArrayList<DataModel> filePaths) {
         Log.d(TAG, "startActionSaveFiles() called with: context = [" + context + "], filePaths = [" + filePaths + "]");
         if (context != null) {
             Intent intent = new Intent(context, DbActionsIntentService.class);
             intent.setAction(ACTION_SAVE_FILES);
-            intent.putStringArrayListExtra(EXTRA_PARAM1, filePaths);
+            intent.putParcelableArrayListExtra(EXTRA_PARAM1, filePaths);
             context.startService(intent);
         }
     }
@@ -57,7 +59,7 @@ public class DbActionsIntentService extends IntentService {
             final String action = intent.getAction();
             switch (action) {
                 case ACTION_SAVE_FILES: {
-                    final ArrayList<String> filePaths = intent.getStringArrayListExtra(EXTRA_PARAM1);
+                    ArrayList<DataModel> filePaths = intent.getParcelableArrayListExtra(EXTRA_PARAM1);
                     handleActionSaveFiles(filePaths);
                 }
                 break;
@@ -87,7 +89,7 @@ public class DbActionsIntentService extends IntentService {
      *
      * @param filePaths the row to add
      */
-    private void handleActionSaveFiles(ArrayList<String> filePaths) {
+    private void handleActionSaveFiles(ArrayList<DataModel> filePaths) {
         Log.d(TAG, "handleActionSaveFiles() called with: filePaths = [" + filePaths + "]");
 
         if (filePaths != null) {
@@ -100,11 +102,13 @@ public class DbActionsIntentService extends IntentService {
         }
     }
 
-    private ContentValues[] getContentValues(ArrayList<String> filePaths) {
+    private ContentValues[] getContentValues(ArrayList<DataModel> filePaths) {
         ContentValues[] contentValues = new ContentValues[filePaths.size()];
         for (int i = 0; i < filePaths.size(); i++) {
             ContentValues values = new ContentValues();
-            values.put(TrollMakerContract.FilePaths.COLUMN_FILE_PATH, filePaths.get(i));
+            DataModel dataModel = filePaths.get(i);
+            values.put(TrollMakerContract.FilePaths.COLUMN_FILE_PATH, dataModel.getFilePath());
+            values.put(TrollMakerContract.FilePaths.COLUMN_DESCRIPTION, dataModel.getDescription());
             contentValues[i] = values;
         }
         return contentValues;

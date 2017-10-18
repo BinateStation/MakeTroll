@@ -24,5 +24,5 @@ public final class Constants {
     /**
      * End Urls
      */
-    public static String URL_SEARCH = URL_BASE + "search.php";
+    public static String URL_SEARCH = URL_BASE + "file-search.php";
 }

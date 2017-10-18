@@ -1,4 +1,5 @@
 <resources>
+    <string name="dbinspector_app_name">Troll Maker DB</string>
     <string name="save">Save</string>
     <string name="facebook_app_id">1648722521825995</string>
     <string name="remove_frame">Remove frame</string>
