@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class TrollMakerDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "TrollMaker.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     TrollMakerDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
