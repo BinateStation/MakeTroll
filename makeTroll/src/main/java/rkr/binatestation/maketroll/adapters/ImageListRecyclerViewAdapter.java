@@ -19,6 +19,7 @@ import java.util.Set;
 
 import rkr.binatestation.maketroll.R;
 import rkr.binatestation.maketroll.models.ErrorModel;
+import rkr.binatestation.maketroll.models.ImagePickerModel;
 
 import static rkr.binatestation.maketroll.utils.Constants.URL_LIVE_IMAGE;
 
@@ -30,11 +31,9 @@ import static rkr.binatestation.maketroll.utils.Constants.URL_LIVE_IMAGE;
 public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Object> mImageEndUrls = new ArrayList<>();
     private Set<String> selectedImages = new HashSet<>();
-    private boolean mShowsDialog;
     private View.OnClickListener mOnClickListener;
 
-    public ImageListRecyclerViewAdapter(boolean showsDialog, View.OnClickListener onClickListener) {
-        mShowsDialog = showsDialog;
+    public ImageListRecyclerViewAdapter(View.OnClickListener onClickListener) {
         mOnClickListener = onClickListener;
     }
 
@@ -79,12 +78,10 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     @Override
     public int getItemViewType(int position) {
         Object object = getItem(position);
-        if (object instanceof String) {
-            if (mShowsDialog && position == 0) {
-                return 1;
-            } else {
-                return 2;
-            }
+        if (object instanceof ImagePickerModel) {
+            return 1;
+        } else if (object instanceof String) {
+            return 2;
         } else {
             return 3;
         }
@@ -122,20 +119,12 @@ public class ImageListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     private Object getItem(int position) {
-        if (mShowsDialog) {
-            return mImageEndUrls.get(position - 1);
-        } else {
-            return mImageEndUrls.get(position);
-        }
+        return mImageEndUrls.get(position);
     }
 
     @Override
     public int getItemCount() {
-        if (mShowsDialog) {
-            return mImageEndUrls.size() + 1;
-        } else {
-            return mImageEndUrls.size();
-        }
+        return mImageEndUrls.size();
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

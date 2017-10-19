@@ -40,6 +40,7 @@ import rkr.binatestation.maketroll.database.DbActionsIntentService;
 import rkr.binatestation.maketroll.database.TrollMakerContract;
 import rkr.binatestation.maketroll.interfaces.ImageSelectedListener;
 import rkr.binatestation.maketroll.models.DataModel;
+import rkr.binatestation.maketroll.models.ImagePickerModel;
 import rkr.binatestation.maketroll.web.VolleySingleton;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
@@ -116,7 +117,7 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
         mSwipeRefreshLayout.setOnRefreshListener(this);
         RecyclerView recyclerView = view.findViewById(R.id.FIL_image_list_recycler_view);
         recyclerView.setLayoutManager(mLayoutManager = new StaggeredGridLayoutManager(2, VERTICAL));
-        recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter(getShowsDialog(), this));
+        recyclerView.setAdapter(mImageListRecyclerViewAdapter = new ImageListRecyclerViewAdapter(this));
         getImageList();
     }
 
@@ -285,6 +286,9 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
                 } else {
                     mLayoutManager.setSpanCount(1);
                 }
+            }
+            if (getShowsDialog()) {
+                filePaths.add(0, new ImagePickerModel());
             }
             mImageListRecyclerViewAdapter.setImageEndUrls(filePaths);
         }
