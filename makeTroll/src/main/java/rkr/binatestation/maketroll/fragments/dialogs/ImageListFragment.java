@@ -301,7 +301,8 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
+        getImageListFromLocalDB("");
+        hideProgress();
     }
 
     @Override
@@ -311,6 +312,8 @@ public class ImageListFragment extends BottomSheetDialogFragment implements Sear
             parseServerResponse(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
+            getImageListFromLocalDB("");
+            hideProgress();
         }
     }
 
